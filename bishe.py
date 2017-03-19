@@ -8,11 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QAction
-from PyQt4.QtGui import QApplication
-from PyQt4.QtGui import QKeySequence
 from PyQt4.QtGui import QMdiArea
-from PyQt4.QtGui import QTextEdit
 
 
 try:
@@ -42,21 +38,39 @@ class Ui_MainWindow(object):
         self.commandLinkButton = QtGui.QCommandLinkButton(self.centralwidget)
         self.commandLinkButton.setGeometry(QtCore.QRect(1040, 160, 141, 41))
         self.commandLinkButton.setObjectName(_fromUtf8("commandLinkButton"))
-        self.textEdit = QtGui.QTextEdit(self.centralwidget)
-        self.textEdit.setGeometry(QtCore.QRect(10, 30, 561, 821))
+        ########################
+        #       TAB AREA       #
+        ########################
+        self.tabWidget = QtGui.QTabWidget(self.centralwidget)
+        self.tabWidget.setGeometry(QtCore.QRect(0, 0, 571, 821))
+        self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName(_fromUtf8("tab"))
+        self.tabWidget.addTab(self.tab, _fromUtf8(""))
+
+        MainWindow.setCentralWidget(self.centralwidget)
+        ########################
+        #      TEXT AREA       #
+        ########################
+        self.textEdit = QtGui.QTextEdit(self.tab)
+        self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 811))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
-        self.textBrowser = QtGui.QTextBrowser(self.centralwidget)
-        self.textBrowser.setGeometry(QtCore.QRect(590, 30, 601, 51))
-        self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
-        self.textBrowser.setReadOnly(True)
-        self.textBrowser_2 = QtGui.QTextBrowser(self.centralwidget)
-        self.textBrowser_2.setGeometry(QtCore.QRect(590, 110, 601, 51))
-        self.textBrowser_2.setObjectName(_fromUtf8("textBrowser_2"))
-        self.textBrowser_2.setReadOnly(True)
-        self.textBrowser_3 = QtGui.QTextBrowser(self.centralwidget)
-        self.textBrowser_3.setGeometry(QtCore.QRect(590, 200, 601, 631))
-        self.textBrowser_3.setObjectName(_fromUtf8("textBrowser_3"))
-        self.textBrowser_3.setReadOnly(True)
+
+        self.regText = QtGui.QTextBrowser(self.centralwidget)
+        self.regText.setGeometry(QtCore.QRect(590, 30, 601, 51))
+        self.regText.setObjectName(_fromUtf8("regText"))
+        self.regText.setReadOnly(True)
+
+        self.memText = QtGui.QTextBrowser(self.centralwidget)
+        self.memText.setGeometry(QtCore.QRect(590, 110, 601, 51))
+        self.memText.setObjectName(_fromUtf8("memText"))
+        self.memText.setReadOnly(True)
+
+        self.resultText = QtGui.QTextBrowser(self.centralwidget)
+        self.resultText.setGeometry(QtCore.QRect(590, 200, 601, 631))
+        self.resultText.setObjectName(_fromUtf8("resultText"))
+        self.resultText.setReadOnly(True)
+
         self.label = QtGui.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(590, 10, 72, 15))
         self.label.setObjectName(_fromUtf8("label"))
@@ -75,6 +89,7 @@ class Ui_MainWindow(object):
         self.horizontalSlider_3.setGeometry(QtCore.QRect(830, 150, 160, 22))
         self.horizontalSlider_3.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalSlider_3.setObjectName(_fromUtf8("horizontalSlider_3"))
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1226, 26))
@@ -82,9 +97,6 @@ class Ui_MainWindow(object):
 
         self.menu = QtGui.QMenu(self.menubar)
         self.menu.setObjectName(_fromUtf8("menu"))
-
-        # self.menu_edit = QtGui.QMenu(self.menubar)
-        # self.menu_edit.setObjectName(_fromUtf8("menu_edit"))
 
         self.menu_run = QtGui.QMenu(self.menubar)
         self.menu_run.setObjectName(_fromUtf8("menu_run"))
@@ -96,18 +108,6 @@ class Ui_MainWindow(object):
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
-
-        self.action_copy = QtGui.QAction(MainWindow)
-        self.action_copy.setObjectName(_fromUtf8("action_copy"))
-        self.action_copy.setShortcut('Ctrl+C')
-
-        self.action_cut = QtGui.QAction(MainWindow)
-        self.action_cut.setObjectName(_fromUtf8("action_cut"))
-        self.action_cut.setShortcut('Ctrl+X')
-
-        self.action_paste = QtGui.QAction(MainWindow)
-        self.action_paste.setObjectName(_fromUtf8("action_paste"))
-        self.action_paste.setShortcut('Ctrl+V')
 
         self.action_new = QtGui.QAction(MainWindow)
         self.action_new.setObjectName(_fromUtf8("action_new"))
@@ -128,17 +128,14 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_run.menuAction())
         self.menubar.addAction(self.menu_debug.menuAction())
-        # self.menubar.addAction(self.menu_edit.menuAction())
 
         self.menu.addAction(self.action_new)
         self.menu.addAction(self.action_open)
         self.menu.addAction(self.action_save)
         self.menu.addAction(self.action_save_as)
 
-        # self.menu_edit.addAction(self.action_copy)
-        # self.menu_edit.addAction(self.action_cut)
-        # self.menu_edit.addAction(self.action_paste)
         self.retranslateUi(MainWindow)
+        self.tabWidget.setCurrentIndex(0)
 
         QtGui.QCommandLinkButton.connect(self.commandLinkButton, QtCore.SIGNAL('clicked()'), self.next_step)
         self.action_open.connect(self.action_open, QtCore.SIGNAL('triggered()'), self.open_file)
@@ -146,59 +143,14 @@ class Ui_MainWindow(object):
         self.action_save.connect(self.action_save, QtCore.SIGNAL('triggered()'), self.save_file)
         self.action_save_as.connect(self.action_save_as, QtCore.SIGNAL('triggered()'), self.save_file_as)
 
-        # self.action_copy.connect(self.action_copy, QtCore.SIGNAL('clicked()'), self.copy_words)
-        # self.action_cut.connect(self.action_copy, QtCore.SIGNAL('clicked()'), self.cut_words)
-        # self.action_paste.connect(self.action_copy, QtCore.SIGNAL('clicked()'), self.paste_words)
-        ########################
-        #       MDI AREA       #
-        ########################
-
-        self.mdi = QMdiArea()
-
-    # def copy_words(self):
-    #     print("linked copy")
-    #     textEdit = self.mdi.activeSubWindow()
-    #     textEdit=textEdit.widget()
-    #     if textEdit is None or not isinstance(textEdit, QTextEdit):
-    #         return
-    #     cursor = textEdit.textCursor()
-    #     text = cursor.selectedText()
-    #     if text:
-    #         clipboard = QApplication.clipboard()
-    #         clipboard.setText(text)
-    #
-    # def cut_words(self):
-    #     print("linked cut")
-    #     textEdit = self.mdi.activeSubWindow()
-    #     textEdit = textEdit.widget()
-    #     if textEdit is None or not isinstance(textEdit, QTextEdit):
-    #         return
-    #     cursor = textEdit.textCursor()
-    #     text = cursor.selectedText()
-    #     if text:
-    #         cursor.removeSelectedText()
-    #         clipboard = QApplication.clipboard()
-    #         clipboard.setText(text)
-    #
-    # def paste_words(self):
-    #     print("linked paste")
-    #     textEdit = self.mdi.activeSubWindow()
-    #     textEdit=textEdit.widget()
-    #     if textEdit is None or not isinstance(textEdit, QTextEdit):
-    #         return
-    #     clipboard = QApplication.clipboard()
-    #     textEdit.insertPlainText(clipboard.text())
-
     def new_file(self):
-        # textEdit = textedit.TextEdit()
-        # self.mdi.addSubWindow(textEdit)
-        # textEdit.show()
-
-        self.newfile = QtGui.QTextEdit()
-        self.newfile.textEdit = QtGui.QTextEdit(self.centralwidget)
-        self.newfile.setGeometry(QtCore.QRect(10, 30, 561, 821))
-        self.newfile.setObjectName(_fromUtf8("textEdit"))
-        self.newfile.show()
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName(_fromUtf8("new_tab"))
+        self.tabWidget.addTab(self.tab, _fromUtf8(""))
+        self.textEdit = QtGui.QTextEdit(self.tab)
+        self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 811))
+        self.textEdit.setObjectName(_fromUtf8("textEdit"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
 
     def open_file(self):
         try:
@@ -226,17 +178,13 @@ class Ui_MainWindow(object):
         fp = open(self.filename, 'w')
         fp.write(data)
         fp.close()
+
     def next_step(self):
         print("linked to next step")
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.commandLinkButton.setText(_translate("MainWindow", "next", None))
-        self.textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.label.setText(_translate("MainWindow", "寄存器", None))
         self.label_2.setText(_translate("MainWindow", "存储器", None))
         self.menu.setTitle(_translate("MainWindow", "文件", None))
@@ -246,14 +194,9 @@ class Ui_MainWindow(object):
         self.action_open.setText(_translate("MainWindow", "打开", None))
         self.action_save.setText(_translate("MainWindow", "保存", None))
         self.action_save_as.setText(_translate("MainWindow", "另存为", None))
-        # self.menu_edit.setTitle(_translate("MainWindow", "编辑", None))
-        # self.action_copy.setText(_translate("MainWindow", "复制", None))
-        # self.action_cut.setText(_translate("MainWindow", "剪切", None))
-        # self.action_paste.setText(_translate("MainWindow", "粘贴", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "file_name", None))
+        self.tabWidget.setCurrentIndex(0)
 
-
-class newFileWindow(Ui_MainWindow):
-    pass
 
 if __name__ == "__main__":
     import sys
