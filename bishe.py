@@ -8,6 +8,12 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtGui import QAction
+from PyQt4.QtGui import QApplication
+from PyQt4.QtGui import QKeySequence
+from PyQt4.QtGui import QMdiArea
+from PyQt4.QtGui import QTextEdit
+
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -25,10 +31,12 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 file_name = ""
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1226, 890)
+
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.commandLinkButton = QtGui.QCommandLinkButton(self.centralwidget)
@@ -71,40 +79,126 @@ class Ui_MainWindow(object):
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1226, 26))
         self.menubar.setObjectName(_fromUtf8("menubar"))
+
         self.menu = QtGui.QMenu(self.menubar)
         self.menu.setObjectName(_fromUtf8("menu"))
+
+        # self.menu_edit = QtGui.QMenu(self.menubar)
+        # self.menu_edit.setObjectName(_fromUtf8("menu_edit"))
+
         self.menu_run = QtGui.QMenu(self.menubar)
         self.menu_run.setObjectName(_fromUtf8("menu_run"))
+
         self.menu_debug = QtGui.QMenu(self.menubar)
         self.menu_debug.setObjectName(_fromUtf8("menu_debug"))
         MainWindow.setMenuBar(self.menubar)
+
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
+
+        self.action_copy = QtGui.QAction(MainWindow)
+        self.action_copy.setObjectName(_fromUtf8("action_copy"))
+        self.action_copy.setShortcut('Ctrl+C')
+
+        self.action_cut = QtGui.QAction(MainWindow)
+        self.action_cut.setObjectName(_fromUtf8("action_cut"))
+        self.action_cut.setShortcut('Ctrl+X')
+
+        self.action_paste = QtGui.QAction(MainWindow)
+        self.action_paste.setObjectName(_fromUtf8("action_paste"))
+        self.action_paste.setShortcut('Ctrl+V')
+
         self.action_new = QtGui.QAction(MainWindow)
         self.action_new.setObjectName(_fromUtf8("action_new"))
+        self.action_new.setShortcut('Ctrl+N')
+
         self.action_open = QtGui.QAction(MainWindow)
         self.action_open.setObjectName(_fromUtf8("action_open"))
         self.action_open.setShortcut('Ctrl+O')
+
         self.action_save = QtGui.QAction(MainWindow)
         self.action_save.setObjectName(_fromUtf8("action_save"))
         self.action_save.setShortcut('Ctrl+S')
+
         self.action_save_as = QtGui.QAction(MainWindow)
         self.action_save_as.setObjectName(_fromUtf8("action_save_as"))
         self.action_save_as.setShortcut('Ctrl+Shift+A')
+
+        self.menubar.addAction(self.menu.menuAction())
+        self.menubar.addAction(self.menu_run.menuAction())
+        self.menubar.addAction(self.menu_debug.menuAction())
+        # self.menubar.addAction(self.menu_edit.menuAction())
+
         self.menu.addAction(self.action_new)
         self.menu.addAction(self.action_open)
         self.menu.addAction(self.action_save)
         self.menu.addAction(self.action_save_as)
-        self.menubar.addAction(self.menu.menuAction())
-        self.menubar.addAction(self.menu_run.menuAction())
-        self.menubar.addAction(self.menu_debug.menuAction())
 
+        # self.menu_edit.addAction(self.action_copy)
+        # self.menu_edit.addAction(self.action_cut)
+        # self.menu_edit.addAction(self.action_paste)
         self.retranslateUi(MainWindow)
+
         QtGui.QCommandLinkButton.connect(self.commandLinkButton, QtCore.SIGNAL('clicked()'), self.next_step)
         self.action_open.connect(self.action_open, QtCore.SIGNAL('triggered()'), self.open_file)
-
+        self.action_new.connect(self.action_new, QtCore.SIGNAL('triggered()'), self.new_file)
+        self.action_save.connect(self.action_save, QtCore.SIGNAL('triggered()'), self.save_file)
         self.action_save_as.connect(self.action_save_as, QtCore.SIGNAL('triggered()'), self.save_file_as)
+
+        # self.action_copy.connect(self.action_copy, QtCore.SIGNAL('clicked()'), self.copy_words)
+        # self.action_cut.connect(self.action_copy, QtCore.SIGNAL('clicked()'), self.cut_words)
+        # self.action_paste.connect(self.action_copy, QtCore.SIGNAL('clicked()'), self.paste_words)
+        ########################
+        #       MDI AREA       #
+        ########################
+
+        self.mdi = QMdiArea()
+
+    # def copy_words(self):
+    #     print("linked copy")
+    #     textEdit = self.mdi.activeSubWindow()
+    #     textEdit=textEdit.widget()
+    #     if textEdit is None or not isinstance(textEdit, QTextEdit):
+    #         return
+    #     cursor = textEdit.textCursor()
+    #     text = cursor.selectedText()
+    #     if text:
+    #         clipboard = QApplication.clipboard()
+    #         clipboard.setText(text)
+    #
+    # def cut_words(self):
+    #     print("linked cut")
+    #     textEdit = self.mdi.activeSubWindow()
+    #     textEdit = textEdit.widget()
+    #     if textEdit is None or not isinstance(textEdit, QTextEdit):
+    #         return
+    #     cursor = textEdit.textCursor()
+    #     text = cursor.selectedText()
+    #     if text:
+    #         cursor.removeSelectedText()
+    #         clipboard = QApplication.clipboard()
+    #         clipboard.setText(text)
+    #
+    # def paste_words(self):
+    #     print("linked paste")
+    #     textEdit = self.mdi.activeSubWindow()
+    #     textEdit=textEdit.widget()
+    #     if textEdit is None or not isinstance(textEdit, QTextEdit):
+    #         return
+    #     clipboard = QApplication.clipboard()
+    #     textEdit.insertPlainText(clipboard.text())
+
+    def new_file(self):
+        # textEdit = textedit.TextEdit()
+        # self.mdi.addSubWindow(textEdit)
+        # textEdit.show()
+
+        self.newfile = QtGui.QTextEdit()
+        self.newfile.textEdit = QtGui.QTextEdit(self.centralwidget)
+        self.newfile.setGeometry(QtCore.QRect(10, 30, 561, 821))
+        self.newfile.setObjectName(_fromUtf8("textEdit"))
+        self.newfile.show()
 
     def open_file(self):
         try:
@@ -117,7 +211,8 @@ class Ui_MainWindow(object):
         file_name = self.filename
 
     def save_file(self):
-        if not file_name:
+        print(file_name)
+        if file_name == '':
             self.save_file_as()
         else:
             fp = open(file_name, 'w+')
@@ -151,7 +246,14 @@ class Ui_MainWindow(object):
         self.action_open.setText(_translate("MainWindow", "打开", None))
         self.action_save.setText(_translate("MainWindow", "保存", None))
         self.action_save_as.setText(_translate("MainWindow", "另存为", None))
+        # self.menu_edit.setTitle(_translate("MainWindow", "编辑", None))
+        # self.action_copy.setText(_translate("MainWindow", "复制", None))
+        # self.action_cut.setText(_translate("MainWindow", "剪切", None))
+        # self.action_paste.setText(_translate("MainWindow", "粘贴", None))
 
+
+class newFileWindow(Ui_MainWindow):
+    pass
 
 if __name__ == "__main__":
     import sys
