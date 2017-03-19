@@ -15,7 +15,7 @@ def print_mine(string):
 
 
 def main(filename):
-            
+
     opt_list = []
     opt_list_fore = []
     pc_list_fore = []
@@ -309,7 +309,7 @@ def main(filename):
     src_name = filename
     file_in_path = os.path.abspath(src_name)
     #path = sys.path[0]
-    
+
     folder_name = 'edited_version'
 
     path = os.path.dirname(filename)
@@ -367,16 +367,16 @@ def main(filename):
                 l = []
                 l = string
                 l.insert(0,L[0])
-                
+
                 add_to_index()
                 add_to_index_fore()
-                
+
                 opt_list.append(l)
                 opt_list_fore.append(l)
-                
+
                 del l
                 l = []
-                
+
                 for line in fp.readlines()[count:]:
                     lin = str(line).lstrip()
                     lin = lin.replace('\n', '')
@@ -399,7 +399,7 @@ def main(filename):
 
                         add_to_index()
                         add_to_index_fore()
-                        
+
                         opt_list.append(l)
                         opt_list_fore.append(l)
                         del l
@@ -800,4 +800,5 @@ def main(filename):
     return rst_string
 
 if __name__ == "__main__":
-    main('file_in.txt')
+    main('05136064.txt')
+0
