@@ -117,10 +117,13 @@ class Ui_MainWindow(object):
         file_name = self.filename
 
     def save_file(self):
-        fp = open(file_name, 'w+')
-        data = str(self.textEdit.toPlainText())
-        fp.write(data)
-        fp.close()
+        if not file_name:
+            self.save_file_as()
+        else:
+            fp = open(file_name, 'w+')
+            data = str(self.textEdit.toPlainText())
+            fp.write(data)
+            fp.close()
 
     def save_file_as(self):
         self.filename = QtGui.QFileDialog.getSaveFileName(None, 'save_file', './')
