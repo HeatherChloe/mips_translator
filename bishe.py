@@ -7,8 +7,9 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QMdiArea
+
 
 
 try:
@@ -25,11 +26,14 @@ try:
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-file_name = ""
+
+global file_name
+file_name = ''
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        MainWindow.filename = ''
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1226, 890)
 
@@ -145,8 +149,8 @@ class Ui_MainWindow(object):
 
     def new_file(self):
         self.tab = QtGui.QWidget()
-        self.tab.setObjectName(_fromUtf8("new_tab"))
-        self.tabWidget.addTab(self.tab, _fromUtf8(""))
+        # self.tab.setObjectName(_fromUtf8("new_tab"))
+        self.tabWidget.addTab(self.tab, _fromUtf8("new_tab"))
         self.textEdit = QtGui.QTextEdit(self.tab)
         self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 811))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
@@ -154,26 +158,36 @@ class Ui_MainWindow(object):
 
     def open_file(self):
         try:
-            self.filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', '/home')
-            fname = open(self.filename, encoding="utf-8")
-            data = fname.read()
+            self.filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './')
+            self.tab = QtGui.QWidget()
+            tab_name = str(self.filename.split('/')[-1])
+            # self.tab.setObjectName(_fromUtf8(tab_name))
+            self.tabWidget.addTab(self.tab, _fromUtf8(tab_name))
+            self.textEdit = QtGui.QTextEdit(self.tab)
+            self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 811))
+            self.textEdit.setObjectName(_fromUtf8("textEdit"))
+            self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", tab_name, None))
+            fp = open(self.filename, encoding="utf-8")
+            data = fp.read()
             self.textEdit.setText(data)
+            global file_name
+            file_name = self.filename
+
         except UnicodeDecodeError:
             QtGui.QMessageBox.question(None, 'Warning', "Error: Please use utf-8 encoding to input file!")
-        file_name = self.filename
 
     def save_file(self):
-        print(file_name)
         if file_name == '':
             self.save_file_as()
         else:
+            print(file_name)
             fp = open(file_name, 'w+')
             data = str(self.textEdit.toPlainText())
             fp.write(data)
             fp.close()
 
     def save_file_as(self):
-        self.filename = QtGui.QFileDialog.getSaveFileName(None, 'save_file', './')
+        self.filename = QtGui.QFileDialog.getSaveFileName(None, 'save_file_as', './')
         data = str(self.textEdit.toPlainText())
         fp = open(self.filename, 'w')
         fp.write(data)
