@@ -48,6 +48,7 @@ class Ui_MainWindow(object):
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(0, 0, 571, 821))
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
+        self.tabWidget.setTabsClosable(True)
         self.tab = QtGui.QWidget()
         self.tab.setObjectName(_fromUtf8("tab"))
         self.tabWidget.addTab(self.tab, _fromUtf8(""))
@@ -95,6 +96,7 @@ class Ui_MainWindow(object):
         self.horizontalSlider_3.setObjectName(_fromUtf8("horizontalSlider_3"))
 
         MainWindow.setCentralWidget(self.centralwidget)
+
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1226, 26))
         self.menubar.setObjectName(_fromUtf8("menubar"))
@@ -140,17 +142,26 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
-
+        ########################
+        #     CONNECT AREA     #
+        ########################
         QtGui.QCommandLinkButton.connect(self.commandLinkButton, QtCore.SIGNAL('clicked()'), self.next_step)
         self.action_open.connect(self.action_open, QtCore.SIGNAL('triggered()'), self.open_file)
         self.action_new.connect(self.action_new, QtCore.SIGNAL('triggered()'), self.new_file)
         self.action_save.connect(self.action_save, QtCore.SIGNAL('triggered()'), self.save_file)
         self.action_save_as.connect(self.action_save_as, QtCore.SIGNAL('triggered()'), self.save_file_as)
+        self.tabWidget.connect(self.tabWidget, QtCore.SIGNAL("tabCloseRequested(int)"), self.close_tab)
+
+    def close_tab(self):
+        # 关闭标签
+        i = self.tabWidget.currentIndex()  # 获取当前处于激活状态的标签
+        self.tabWidget.removeTab(i)
 
     def new_file(self):
         self.tab = QtGui.QWidget()
         # self.tab.setObjectName(_fromUtf8("new_tab"))
         self.tabWidget.addTab(self.tab, _fromUtf8("new_tab"))
+        self.tabWidget.setTabsClosable(True)
         self.textEdit = QtGui.QTextEdit(self.tab)
         self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 811))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
@@ -163,6 +174,7 @@ class Ui_MainWindow(object):
             tab_name = str(self.filename.split('/')[-1])
             # self.tab.setObjectName(_fromUtf8(tab_name))
             self.tabWidget.addTab(self.tab, _fromUtf8(tab_name))
+            self.tabWidget.setTabsClosable(True)
             self.textEdit = QtGui.QTextEdit(self.tab)
             self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 811))
             self.textEdit.setObjectName(_fromUtf8("textEdit"))
