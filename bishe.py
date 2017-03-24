@@ -11,7 +11,6 @@
 from PyQt4 import QtCore, QtGui
 
 
-
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -35,8 +34,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.filename = ''
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(1226, 890)
-
+        MainWindow.resize(1335, 890)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.commandLinkButton = QtGui.QCommandLinkButton(self.centralwidget)
@@ -46,7 +44,7 @@ class Ui_MainWindow(object):
         #       TAB AREA       #
         ########################
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
-        self.tabWidget.setGeometry(QtCore.QRect(0, 0, 571, 821))
+        self.tabWidget.setGeometry(QtCore.QRect(20, 10, 631, 821))
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
         self.tabWidget.setTabsClosable(True)
         self.tab = QtGui.QWidget()
@@ -58,42 +56,46 @@ class Ui_MainWindow(object):
         #      TEXT AREA       #
         ########################
         self.textEdit = QtGui.QTextEdit(self.tab)
-        self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 811))
+        self.textEdit.setGeometry(QtCore.QRect(0, 0, 625, 821))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
 
         self.regText = QtGui.QTextBrowser(self.centralwidget)
-        self.regText.setGeometry(QtCore.QRect(590, 30, 601, 51))
+        self.regText.setGeometry(QtCore.QRect(710, 30, 601, 51))
         self.regText.setObjectName(_fromUtf8("regText"))
         self.regText.setReadOnly(True)
 
         self.memText = QtGui.QTextBrowser(self.centralwidget)
-        self.memText.setGeometry(QtCore.QRect(590, 110, 601, 51))
+        self.memText.setGeometry(QtCore.QRect(710, 110, 601, 51))
         self.memText.setObjectName(_fromUtf8("memText"))
         self.memText.setReadOnly(True)
 
         self.resultText = QtGui.QTextBrowser(self.centralwidget)
-        self.resultText.setGeometry(QtCore.QRect(590, 200, 601, 631))
+        self.resultText.setGeometry(QtCore.QRect(710, 200, 601, 631))
         self.resultText.setObjectName(_fromUtf8("resultText"))
         self.resultText.setReadOnly(True)
 
         self.label = QtGui.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(590, 10, 72, 15))
+        self.label.setGeometry(QtCore.QRect(730, 10, 72, 15))
         self.label.setObjectName(_fromUtf8("label"))
         self.label_2 = QtGui.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(590, 90, 72, 15))
+        self.label_2.setGeometry(QtCore.QRect(730, 90, 72, 15))
         self.label_2.setObjectName(_fromUtf8("label_2"))
-        self.horizontalSlider = QtGui.QSlider(self.centralwidget)
-        self.horizontalSlider.setGeometry(QtCore.QRect(150, 820, 160, 22))
-        self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
-        self.horizontalSlider.setObjectName(_fromUtf8("horizontalSlider"))
-        self.horizontalSlider_2 = QtGui.QSlider(self.centralwidget)
-        self.horizontalSlider_2.setGeometry(QtCore.QRect(830, 70, 160, 22))
-        self.horizontalSlider_2.setOrientation(QtCore.Qt.Horizontal)
-        self.horizontalSlider_2.setObjectName(_fromUtf8("horizontalSlider_2"))
-        self.horizontalSlider_3 = QtGui.QSlider(self.centralwidget)
-        self.horizontalSlider_3.setGeometry(QtCore.QRect(830, 150, 160, 22))
-        self.horizontalSlider_3.setOrientation(QtCore.Qt.Horizontal)
-        self.horizontalSlider_3.setObjectName(_fromUtf8("horizontalSlider_3"))
+
+        ########################
+        #     SLIDER AREA     #
+        ########################
+        # self.horizontalSlider = QtGui.QSlider(self.centralwidget)
+        # self.horizontalSlider.setGeometry(QtCore.QRect(150, 820, 160, 22))
+        # self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
+        # self.horizontalSlider.setObjectName(_fromUtf8("horizontalSlider"))
+        # self.horizontalSlider_2 = QtGui.QSlider(self.centralwidget)
+        # self.horizontalSlider_2.setGeometry(QtCore.QRect(830, 70, 160, 22))
+        # self.horizontalSlider_2.setOrientation(QtCore.Qt.Horizontal)
+        # self.horizontalSlider_2.setObjectName(_fromUtf8("horizontalSlider_2"))
+        # self.horizontalSlider_3 = QtGui.QSlider(self.centralwidget)
+        # self.horizontalSlider_3.setGeometry(QtCore.QRect(830, 150, 160, 22))
+        # self.horizontalSlider_3.setOrientation(QtCore.Qt.Horizontal)
+        # self.horizontalSlider_3.setObjectName(_fromUtf8("horizontalSlider_3"))
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -104,16 +106,27 @@ class Ui_MainWindow(object):
         self.menu = QtGui.QMenu(self.menubar)
         self.menu.setObjectName(_fromUtf8("menu"))
 
-        self.menu_run = QtGui.QMenu(self.menubar)
-        self.menu_run.setObjectName(_fromUtf8("menu_run"))
+        self.run_or_debug = QtGui.QMenu(self.menubar)
+        self.run_or_debug.setObjectName(_fromUtf8("run_or_debug"))
 
-        self.menu_debug = QtGui.QMenu(self.menubar)
-        self.menu_debug.setObjectName(_fromUtf8("menu_debug"))
+        # self.action_run = QtGui.QMenu(self.menubar)
+        # self.action_run.setObjectName(_fromUtf8("action_run"))
+        #
+        # self.action_debug = QtGui.QMenu(self.menubar)
+        # self.action_debug.setObjectName(_fromUtf8("action_debug"))
         MainWindow.setMenuBar(self.menubar)
 
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
+
+        self.action_run = QtGui.QAction(MainWindow)
+        self.action_run.setObjectName(_fromUtf8("action_run"))
+        self.action_run.setShortcut('F5')
+
+        self.action_debug = QtGui.QAction(MainWindow)
+        self.action_debug.setObjectName(_fromUtf8("action_debug"))
+        self.action_debug.setShortcut('F7')
 
         self.action_new = QtGui.QAction(MainWindow)
         self.action_new.setObjectName(_fromUtf8("action_new"))
@@ -132,14 +145,17 @@ class Ui_MainWindow(object):
         self.action_save_as.setShortcut('Ctrl+Shift+A')
 
         self.menubar.addAction(self.menu.menuAction())
-        self.menubar.addAction(self.menu_run.menuAction())
-        self.menubar.addAction(self.menu_debug.menuAction())
+        self.menubar.addAction(self.run_or_debug.menuAction())
+        # self.menubar.addAction(self.action_debug.menuAction())
+
 
         self.menu.addAction(self.action_new)
         self.menu.addAction(self.action_open)
         self.menu.addAction(self.action_save)
         self.menu.addAction(self.action_save_as)
 
+        self.run_or_debug.addAction(self.action_run)
+        self.run_or_debug.addAction(self.action_debug)
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         ########################
@@ -150,7 +166,15 @@ class Ui_MainWindow(object):
         self.action_new.connect(self.action_new, QtCore.SIGNAL('triggered()'), self.new_file)
         self.action_save.connect(self.action_save, QtCore.SIGNAL('triggered()'), self.save_file)
         self.action_save_as.connect(self.action_save_as, QtCore.SIGNAL('triggered()'), self.save_file_as)
+        self.action_run.connect(self.action_run, QtCore.SIGNAL('clicked()'), self.run_file)
+        self.action_debug.connect(self.action_debug, QtCore.SIGNAL('clicked()'), self.debug_file)
         self.tabWidget.connect(self.tabWidget, QtCore.SIGNAL("tabCloseRequested(int)"), self.close_tab)
+
+    def debug_file(self):
+        print("debug mode")
+
+    def run_file(self):
+        print("run mode")
 
     def close_tab(self):
         # 关闭标签
@@ -163,7 +187,7 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab, _fromUtf8("new_tab"))
         self.tabWidget.setTabsClosable(True)
         self.textEdit = QtGui.QTextEdit(self.tab)
-        self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 811))
+        self.textEdit.setGeometry(QtCore.QRect(QtCore.QRect(0, 0, 625, 821)))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
 
@@ -192,7 +216,6 @@ class Ui_MainWindow(object):
         if file_name == '':
             self.save_file_as()
         else:
-            print(file_name)
             fp = open(file_name, 'w+')
             data = str(self.textEdit.toPlainText())
             fp.write(data)
@@ -214,8 +237,9 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "寄存器", None))
         self.label_2.setText(_translate("MainWindow", "存储器", None))
         self.menu.setTitle(_translate("MainWindow", "文件", None))
-        self.menu_run.setTitle(_translate("MainWindow", "运行", None))
-        self.menu_debug.setTitle(_translate("MainWindow", "调试", None))
+        self.action_run.setText(_translate("MainWindow", "运行", None))
+        self.run_or_debug.setTitle(_translate("MainWindow", "运行模式", None))
+        self.action_debug.setText(_translate("MainWindow", "单步调试", None))
         self.action_new.setText(_translate("MainWindow", "新建", None))
         self.action_open.setText(_translate("MainWindow", "打开", None))
         self.action_save.setText(_translate("MainWindow", "保存", None))
