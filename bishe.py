@@ -148,7 +148,6 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.run_or_debug.menuAction())
         # self.menubar.addAction(self.action_debug.menuAction())
 
-
         self.menu.addAction(self.action_new)
         self.menu.addAction(self.action_open)
         self.menu.addAction(self.action_save)
@@ -166,8 +165,8 @@ class Ui_MainWindow(object):
         self.action_new.connect(self.action_new, QtCore.SIGNAL('triggered()'), self.new_file)
         self.action_save.connect(self.action_save, QtCore.SIGNAL('triggered()'), self.save_file)
         self.action_save_as.connect(self.action_save_as, QtCore.SIGNAL('triggered()'), self.save_file_as)
-        self.action_run.connect(self.action_run, QtCore.SIGNAL('clicked()'), self.run_file)
-        self.action_debug.connect(self.action_debug, QtCore.SIGNAL('clicked()'), self.debug_file)
+        self.action_run.connect(self.action_run, QtCore.SIGNAL('triggered()'), self.run_file)
+        self.action_debug.connect(self.action_debug, QtCore.SIGNAL('triggered()'), self.debug_file)
         self.tabWidget.connect(self.tabWidget, QtCore.SIGNAL("tabCloseRequested(int)"), self.close_tab)
 
     def debug_file(self):
