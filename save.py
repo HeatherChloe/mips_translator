@@ -404,7 +404,7 @@ def main(filename):
                         opt_list_fore.append(l)
                         del l
                         l = []
-
+            print(opt_list)
             for pc in pc_list_read:
 ##                print(opt_list)
                 index = pc_list_read.index(pc)
@@ -795,10 +795,10 @@ def main(filename):
     for opt in opt_list_fore:
         print_mine('-------------'+ str(pc_list_fore[opt_list_fore.index(opt)]) + '--------------')
         print_mine(opt)
-            
+    print(reg)
     fp.close()
     return rst_string
 
 if __name__ == "__main__":
-    main('05136064.txt')
+    main('file_in.txt')
 0
