@@ -16,10 +16,8 @@ def ready_to_run(opt_list_with_line_num):
     try:
         print("###########Run Prepare###########")
         for opt in opt_list_with_line_num:
-            if_opt_eqs(opt, reg_list, mem_list,opt_list_with_line_num)
-        print(reg_list)
+            if_opt_eqs(opt, reg_list, mem_list, opt_list_with_line_num)
     except Exception as e:
-        print("############Exception main############")
         print(e)
         print(trace())
         print("############Exception main############")
