@@ -643,35 +643,33 @@ def main(filename):
 
 
                 if opt[0] == 'sub':
-                    op    = '00000'
+                    op = '00000'
                     shamt = '00000'
-                    func  = '100010'
-                    ns    = R.get_ns()
-                    nt    = R.get_nt()
-                    nd    = R.get_nd()
-                    rd    = sub(nd, ns, nt)
+                    func = '100010'
+                    ns = R.get_ns()
+                    nt = R.get_nt()
+                    nd = R.get_nd()
+                    sub(nd, ns, nt)
                     init_nd(nd)
-                    #print(l)
-                    ns    = rmv(bin(int(ns)))
-                    nt    = rmv(bin(int(nt)))
-                    nd    = rmv(bin(int(nd)))
-                    print_mine("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+                    ns = rmv(bin(int(ns)))
+                    nt = rmv(bin(int(nt)))
+                    nd = rmv(bin(int(nd)))
+                    print_mine("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
                     print_mine(reg)
                     print_mine("--------------------------")
 
-
                 if opt[0] == 'subu':
-                    op    = '000000'
+                    op = '000000'
                     shamt = '00000'
-                    func  = '100010'
-                    ns    = R.get_ns()
-                    nt    = R.get_nt()
-                    nd    = R.get_nd()
-                    rd    = subu(nd, ns, nt)
+                    func = '100010'
+                    ns = R.get_ns()
+                    nt = R.get_nt()
+                    nd = R.get_nd()
+                    subu(nd, ns, nt)
                     init_nd(nd)
-                    ns    = rmv(bin(int(ns)))
-                    nt    = rmv(bin(int(nt)))
-                    nd    = rmv(bin(int(nd)))
+                    ns = rmv(bin(int(ns)))
+                    nt = rmv(bin(int(nt)))
+                    nd = rmv(bin(int(nd)))
                     print_mine("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
                     print_mine(reg)
                     print_mine("--------------------------")
@@ -680,11 +678,12 @@ def main(filename):
                 if opt[0] == 'slt':
                     op    = '000000'
                     shamt = '00000'
+                    func = '101010'
                     ns    = R.get_ns()
                     nt    = R.get_nt()
                     nd    = R.get_nd()
-                    rd = slt(nd, ns, nt)
-                    init_nd(nd)
+                    slt(nd, ns, nt)
+                    # init_nd(nd)
                     ns    = rmv(bin(int(ns)))
                     nt    = rmv(bin(int(nt)))
                     nd    = rmv(bin(int(nd)))
@@ -696,6 +695,7 @@ def main(filename):
                 if opt[0] == 'sltu':
                     op    = '000000'
                     shamt = '00000'
+                    func = "101011"
                     ns    = R.get_ns()
                     nt    = R.get_nt()
                     nd    = R.get_nd()
@@ -796,6 +796,8 @@ def main(filename):
         print_mine('-------------'+ str(pc_list_fore[opt_list_fore.index(opt)]) + '--------------')
         print_mine(opt)
     print(reg)
+    print(reg)
+    print(mem)
     fp.close()
     return rst_string
 
