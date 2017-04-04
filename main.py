@@ -11,6 +11,16 @@ for i in range(0, 32):
 
 mem_list = {}
 
+def show_result():
+    pass
+
+
+def show_reg():
+    return str(reg_list)
+
+
+def show_mem():
+    return str(mem_list)
 
 def ready_to_run(opt_list_with_line_num):
     try:
@@ -21,7 +31,9 @@ def ready_to_run(opt_list_with_line_num):
         print(e)
         print(trace())
         print("############Exception main############")
-if __name__ == '__main__':
+
+
+def main():
     opt_list_with_line_num = file_works.file_to_edit_ver('E:\workSpace\mips_translator\\file_in.txt')
     ready_to_run(opt_list_with_line_num)
-    print("###########Run Over##############")
+
