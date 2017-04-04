@@ -2,17 +2,19 @@ from inspect import trace
 
 from common import *
 list_to_beq_jump = []
+j_list = []
 
 
 def if_opt_eqs(opt, reg_list, mem_list, opt_list_with_line_num):
     try:
+        pc = opt_list_with_line_num.index(opt) * 4
         fp_result = open('result.txt', 'a')
         action = list(opt.values())[0][0]
         elses = list(opt.values())[0][0:]
         if action == 'ori':
             ori_obj = HandlerI()
             ori_result = ori_obj.ori(elses, reg_list)
-            fp_result.write(str(opt) + '\n')
+            fp_result.write(str(pc) + " " + str(opt) + '\n')
             fp_result.write(ori_result)
             fp_result.write('\n')
 
@@ -127,11 +129,26 @@ def if_opt_eqs(opt, reg_list, mem_list, opt_list_with_line_num):
             fp_result.write(sra_result)
             fp_result.write('\n')
 
-        # fp = open("E:\\workSpace\\233.txt", 'w+')
-        # for each in opt_list_with_line_num:
-        #     fp.write(str(each) + '\n')
-        # fp.close()
+        if action == 'j':
+            op = '000010'
+            target = int(elses[1])
+            tar_pri = rmv(str(target))
+            print('#32b' + op + '_' + '_'.join(tar_pri[i:i + 4] for i in range(0, len(tar_pri), 4)))
+            if target > 0:
+                j_list = opt_list_with_line_num[int(target)//4 - 1:opt_list_with_line_num.index(opt)]
+            else:
+                j_list = opt_list_with_line_num[0:opt_list_with_line_num.index(opt)]
+            opt_list_with_line_num += j_list
+            print(j_list)
+            print(":)")
+        fp = open("E:\\workSpace\\233.txt", 'w+')
+        for each in opt_list_with_line_num:
+            fp.write(str(each) + '\n')
+        fp.close()
+
     except Exception as e:
         print(e)
         print(trace())
         print('---???---')
+    print(reg_list)
+    print(mem_list)

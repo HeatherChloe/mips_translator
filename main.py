@@ -24,5 +24,4 @@ def ready_to_run(opt_list_with_line_num):
 if __name__ == '__main__':
     opt_list_with_line_num = file_works.file_to_edit_ver('E:\workSpace\mips_translator\\file_in.txt')
     ready_to_run(opt_list_with_line_num)
-    # print(opt_list_with_line_num)
     print("###########Run Over##############")

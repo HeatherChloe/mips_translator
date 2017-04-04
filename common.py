@@ -106,36 +106,50 @@ class HandlerI:
                 ext[i:i + 4] for i in range(0, len(ext), 4)))
 
         def sw(self, elses, reg, mem):
-            op = '101011'
-            ns = self.get_ns(elses)
-            nt = self.get_nt(elses)
-            imm16 = self.getimm(elses)
-            nt = int(nt)
-            ns = int(ns)
-            imm16_n = int(rmv(self.ext(imm16)), 2)
-            reg[ns] = int(str(reg[ns]), 2)
-            mem_key = int(int(reg[ns]) + imm16_n)
-            mem_val = int(reg[nt])
-            mem[mem_key] = mem_val
-            ext = self.ext_16_str(self.ext(imm16))
-            nt = rmv(bin(int(nt)))
-            ns = rmv(bin(int(ns)))
+            try:
+                op = '101011'
+                ns = self.get_ns(elses)
+                nt = self.get_nt(elses)
+                imm16 = self.getimm(elses)
+
+                nt = int(nt)
+                ns = int(ns)
+                imm16_n = int(rmv(self.ext(imm16)), 2)
+                try:
+                    reg[ns] = int(str(reg[ns]), 2)
+                except Exception:
+                    reg[ns] = int(str(reg[ns]))
+                mem_key = int(int(reg[ns]) + imm16_n)
+                mem_val = int(reg[nt])
+                mem[mem_key] = mem_val
+
+                ext = self.ext_16_str(self.ext(imm16))
+                nt = rmv(bin(int(nt)))
+                ns = rmv(bin(int(ns)))
+            except Exception as e:
+                print("sw debug")
+                print(e)
             return str("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(
                 ext[i:i + 4] for i in range(0, len(ext), 4)))
 
         def lw(self, elses, reg, mem):
-            op = '100011'
-            ns = self.get_ns(elses)
-            nt = self.get_nt(elses)
-            imm16 = self.getimm(elses)
-            nt = int(nt)
-            ns = int(ns)
-            imm16_n = int(rmv(self.ext(imm16)), 2)
-            rt = mem[int(reg[ns]) + imm16_n]
-            add_to_reg(nt, rt, reg)
-            ext = self.ext_16_str(self.ext(imm16))
-            nt = rmv(bin(int(nt)))
-            ns = rmv(bin(int(ns)))
+            try:
+                op = '100011'
+                ns = self.get_ns(elses)
+                nt = self.get_nt(elses)
+                imm16 = self.getimm(elses)
+                nt = int(nt)
+                ns = int(ns)
+                imm16_n = int(rmv(self.ext(imm16)), 2)
+
+                rt = mem[int(reg[ns]) + imm16_n]
+                add_to_reg(nt, rt, reg)
+                ext = self.ext_16_str(self.ext(imm16))
+                nt = rmv(bin(int(nt)))
+                ns = rmv(bin(int(ns)))
+            except Exception as e:
+                print('lw')
+                print(e)
             return str("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(
                 ext[i:i + 4] for i in range(0, len(ext), 4)))
     except Exception as e:

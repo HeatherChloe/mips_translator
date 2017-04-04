@@ -206,29 +206,34 @@ def main(filename):
         return rd
 
     def sw(nt, ns, imm16):
-        nt = int(nt)
-        ns = int(ns)
-        imm16_n = int(rmv(I.ext(imm16)),2)
-        reg[ns] = int(str(reg[ns]), 2)
-        
-        mem_key = int(int(reg[ns]) + imm16_n)
- 
-        mem_val = int(reg[nt])
+        try:
+            nt = int(nt)
+            ns = int(ns)
+            imm16_n = int(rmv(I.ext(imm16)),2)
+            reg[ns] = int(str(reg[ns]), 2)
 
-        mem[mem_key] = mem_val
-        
+            mem_key = int(int(reg[ns]) + imm16_n)
+
+            mem_val = int(reg[nt])
+
+            mem[mem_key] = mem_val
+        except Exception as e:
+            print(e)
         print(mem)
         return mem_val
 
     #    mem[reg[ns]+imm16] = reg[nt]
 
     def lw(nt, ns, imm16):
-        nt = int(nt)
-        ns = int(ns)
-        imm16_n  = int(rmv(I.ext(imm16)),2)
+        try:
+            nt = int(nt)
+            ns = int(ns)
+            imm16_n  = int(rmv(I.ext(imm16)),2)
 
-        rt = mem[int(reg[ns]) + imm16_n]
-        add_to_reg(nt, rt)
+            rt = mem[int(reg[ns]) + imm16_n]
+            add_to_reg(nt, rt)
+        except Exception as e:
+            print(e)
         return rt
 
     #    reg[nt] = mem[reg[ns]+imm16]
@@ -447,8 +452,8 @@ def main(filename):
                                     shift_list_aye.append(opt_list[shift_line: ])
                                     shift_list_aye = shift_list_aye[0]
                         #将shift哪一行以及之后的去掉            
-                                    for i in opt_list[shift_line_before + 1:]:
-                                        opt_list.remove(i)            
+                                    # for i in opt_list[shift_line_before + 1:]:
+                                    #     opt_list.remove(i)
                         #
 
                             
@@ -502,8 +507,8 @@ def main(filename):
                                     shift_list_aye.append(opt_list[shift_line: ])
                                     shift_list_aye = shift_list_aye[0]
                         #将shift哪一行以及之后的去掉            
-                                    for i in opt_list[shift_line_before + 1:]:
-                                        opt_list.remove(i)            
+                                    # for i in opt_list[shift_line_before + 1:]:
+                                    #     opt_list.remove(i)
                         #
 
                             
@@ -795,7 +800,6 @@ def main(filename):
     for opt in opt_list_fore:
         print_mine('-------------'+ str(pc_list_fore[opt_list_fore.index(opt)]) + '--------------')
         print_mine(opt)
-    print(reg)
     print(reg)
     print(mem)
     fp.close()
