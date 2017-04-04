@@ -10,6 +10,7 @@
 
 from PyQt4 import QtCore, QtGui
 
+import main
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -80,22 +81,6 @@ class Ui_MainWindow(object):
         self.label_2 = QtGui.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(730, 90, 72, 15))
         self.label_2.setObjectName(_fromUtf8("label_2"))
-
-        ########################
-        #     SLIDER AREA     #
-        ########################
-        # self.horizontalSlider = QtGui.QSlider(self.centralwidget)
-        # self.horizontalSlider.setGeometry(QtCore.QRect(150, 820, 160, 22))
-        # self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
-        # self.horizontalSlider.setObjectName(_fromUtf8("horizontalSlider"))
-        # self.horizontalSlider_2 = QtGui.QSlider(self.centralwidget)
-        # self.horizontalSlider_2.setGeometry(QtCore.QRect(830, 70, 160, 22))
-        # self.horizontalSlider_2.setOrientation(QtCore.Qt.Horizontal)
-        # self.horizontalSlider_2.setObjectName(_fromUtf8("horizontalSlider_2"))
-        # self.horizontalSlider_3 = QtGui.QSlider(self.centralwidget)
-        # self.horizontalSlider_3.setGeometry(QtCore.QRect(830, 150, 160, 22))
-        # self.horizontalSlider_3.setOrientation(QtCore.Qt.Horizontal)
-        # self.horizontalSlider_3.setObjectName(_fromUtf8("horizontalSlider_3"))
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -173,7 +158,9 @@ class Ui_MainWindow(object):
         print("debug mode")
 
     def run_file(self):
-        print("run mode")
+        main.main()
+        self.regText.setText(main.show_reg())
+        self.memText.setText(main.show_mem())
 
     def close_tab(self):
         # 关闭标签
