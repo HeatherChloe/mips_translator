@@ -39,13 +39,13 @@ class Ui_MainWindow(object):
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.commandLinkButton = QtGui.QCommandLinkButton(self.centralwidget)
-        self.commandLinkButton.setGeometry(QtCore.QRect(1040, 160, 141, 41))
+        self.commandLinkButton.setGeometry(QtCore.QRect(1200, 0, 141, 41))
         self.commandLinkButton.setObjectName(_fromUtf8("commandLinkButton"))
         ########################
         #       TAB AREA       #
         ########################
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
-        self.tabWidget.setGeometry(QtCore.QRect(20, 10, 631, 821))
+        self.tabWidget.setGeometry(QtCore.QRect(20, 10, 631, 750))
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
         self.tabWidget.setTabsClosable(True)
 
@@ -58,22 +58,22 @@ class Ui_MainWindow(object):
         #      TEXT AREA       #
         ########################
         self.textEdit = QtGui.QTextEdit(self.tab)
-        self.textEdit.setGeometry(QtCore.QRect(0, 0, 625, 821))
+        self.textEdit.setGeometry(QtCore.QRect(0, 0, 625, 750))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
 
-        self.regText = QtGui.QTextBrowser(self.centralwidget)
-        self.regText.setGeometry(QtCore.QRect(710, 30, 601, 51))
-        self.regText.setObjectName(_fromUtf8("regText"))
+        # self.regText = QtGui.QTextBrowser(self.centralwidget)
+        # self.regText.setGeometry(QtCore.QRect(710, 30, 601, 51))
+        # self.regText.setObjectName(_fromUtf8("regText"))
 
-        self.regText.setReadOnly(True)
+        # self.regText.setReadOnly(True)
 
-        self.memText = QtGui.QTextBrowser(self.centralwidget)
-        self.memText.setGeometry(QtCore.QRect(710, 110, 601, 51))
-        self.memText.setObjectName(_fromUtf8("memText"))
-        self.memText.setReadOnly(True)
+        # self.memText = QtGui.QTextBrowser(self.centralwidget)
+        # self.memText.setGeometry(QtCore.QRect(710, 110, 601, 51))
+        # self.memText.setObjectName(_fromUtf8("memText"))
+        # self.memText.setReadOnly(True)
 
         self.resultText = QtGui.QTextBrowser(self.centralwidget)
-        self.resultText.setGeometry(QtCore.QRect(710, 200, 601, 631))
+        self.resultText.setGeometry(QtCore.QRect(710, 50, 601, 750))
         self.resultText.setObjectName(_fromUtf8("resultText"))
         self.resultText.setReadOnly(True)
 
@@ -96,11 +96,9 @@ class Ui_MainWindow(object):
         self.run_or_debug = QtGui.QMenu(self.menubar)
         self.run_or_debug.setObjectName(_fromUtf8("run_or_debug"))
 
-        # self.action_run = QtGui.QMenu(self.menubar)
-        # self.action_run.setObjectName(_fromUtf8("action_run"))
-        #
-        # self.action_debug = QtGui.QMenu(self.menubar)
-        # self.action_debug.setObjectName(_fromUtf8("action_debug"))
+        self.regAndMem = QtGui.QMenu(self.menubar)
+        self.regAndMem.setObjectName(_fromUtf8("regAndMem"))
+
         MainWindow.setMenuBar(self.menubar)
 
         self.statusbar = QtGui.QStatusBar(MainWindow)
@@ -131,9 +129,17 @@ class Ui_MainWindow(object):
         self.action_save_as.setObjectName(_fromUtf8("action_save_as"))
         self.action_save_as.setShortcut('Ctrl+Shift+A')
 
+        self.action_regShow = QtGui.QAction(MainWindow)
+        self.action_regShow.setObjectName(_fromUtf8("action_regShow"))
+        self.action_regShow.setShortcut('Ctrl+Shift+R')
+
+        self.action_memShow = QtGui.QAction(MainWindow)
+        self.action_memShow.setObjectName(_fromUtf8("action_memShow"))
+        self.action_memShow.setShortcut('Ctrl+Shift+M')
+
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.run_or_debug.menuAction())
-        # self.menubar.addAction(self.action_debug.menuAction())
+        self.menubar.addAction(self.regAndMem.menuAction())
 
         self.menu.addAction(self.action_new)
         self.menu.addAction(self.action_open)
@@ -142,6 +148,10 @@ class Ui_MainWindow(object):
 
         self.run_or_debug.addAction(self.action_run)
         self.run_or_debug.addAction(self.action_debug)
+
+        self.regAndMem.addAction(self.action_regShow)
+        self.regAndMem.addAction(self.action_memShow)
+
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         ########################
@@ -171,11 +181,10 @@ class Ui_MainWindow(object):
 
     def new_file(self):
         self.tab = QtGui.QWidget()
-        # self.tab.setObjectName(_fromUtf8("new_tab"))
         self.tabWidget.addTab(self.tab, _fromUtf8("new_tab"))
         self.tabWidget.setTabsClosable(True)
         self.textEdit = QtGui.QTextEdit(self.tab)
-        self.textEdit.setGeometry(QtCore.QRect(QtCore.QRect(0, 0, 625, 821)))
+        self.textEdit.setGeometry(QtCore.QRect(QtCore.QRect(0, 0, 625, 750)))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
 
@@ -188,7 +197,7 @@ class Ui_MainWindow(object):
             self.tabWidget.addTab(self.tab, _fromUtf8(tab_name))
             self.tabWidget.setTabsClosable(True)
             self.textEdit = QtGui.QTextEdit(self.tab)
-            self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 811))
+            self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 750))
             self.textEdit.setObjectName(_fromUtf8("textEdit"))
             self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", tab_name, None))
             fp = open(self.filename, encoding="utf-8")
@@ -222,16 +231,20 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.commandLinkButton.setText(_translate("MainWindow", "next", None))
-        self.label.setText(_translate("MainWindow", "寄存器", None))
-        self.label_2.setText(_translate("MainWindow", "存储器", None))
         self.menu.setTitle(_translate("MainWindow", "文件", None))
-        self.action_run.setText(_translate("MainWindow", "运行", None))
-        self.run_or_debug.setTitle(_translate("MainWindow", "运行模式", None))
-        self.action_debug.setText(_translate("MainWindow", "单步调试", None))
         self.action_new.setText(_translate("MainWindow", "新建", None))
         self.action_open.setText(_translate("MainWindow", "打开", None))
         self.action_save.setText(_translate("MainWindow", "保存", None))
         self.action_save_as.setText(_translate("MainWindow", "另存为", None))
+
+        self.run_or_debug.setTitle(_translate("MainWindow", "运行模式", None))
+        self.action_run.setText(_translate("MainWindow", "运行", None))
+        self.action_debug.setText(_translate("MainWindow", "单步调试", None))
+
+        self.regAndMem.setTitle(_translate("MainWindow", "查看", None))
+        self.action_regShow.setText(_translate("MainWindow", "寄存器", None))
+        self.action_memShow.setText(_translate("MainWindow", "存储器", None))
+
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "file_name", None))
         self.tabWidget.setCurrentIndex(0)
 
