@@ -9,6 +9,8 @@
 
 
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtGui import QMainWindow
+from PyQt4.QtGui import QWidget
 
 import main
 
@@ -164,15 +166,28 @@ class Ui_MainWindow(object):
         self.action_save_as.connect(self.action_save_as, QtCore.SIGNAL('triggered()'), self.save_file_as)
         self.action_run.connect(self.action_run, QtCore.SIGNAL('triggered()'), self.run_file)
         self.action_debug.connect(self.action_debug, QtCore.SIGNAL('triggered()'), self.debug_file)
+
+        self.action_regShow.connect(self.action_regShow, QtCore.SIGNAL('triggered()'), self.showRegResult)
+        self.action_memShow.connect(self.action_memShow, QtCore.SIGNAL('triggered()'), self.showMemResult)
+
         self.tabWidget.connect(self.tabWidget, QtCore.SIGNAL("tabCloseRequested(int)"), self.close_tab)
 
     def debug_file(self):
         print("debug mode")
 
+    def showRegResult(self):
+        # regWindow=QWidget.QMessageBox.
+        self.regwindow = RegWindow()
+        self.regwindow.show()
+
+    def showMemResult(self):
+        self.memwindow = RegWindow()
+        self.memwindow.show()
+
     def run_file(self):
         main.main()
-        self.regText.setText(main.show_reg())
-        self.memText.setText(main.show_mem())
+        # self.regText.setText(main.show_reg())
+        # self.memText.setText(main.show_mem())
 
     def close_tab(self):
         # 关闭标签
@@ -248,6 +263,25 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "file_name", None))
         self.tabWidget.setCurrentIndex(0)
 
+
+class RegWindow(QMainWindow):
+    def __init__(self):
+        super(RegWindow, self).__init__()
+        self.resize(800, 400)
+        self.regText = QtGui.QTextBrowser(self)
+        self.regText.setGeometry(QtCore.QRect(0, 0, 800, 400))
+        self.regText.setObjectName(_fromUtf8("regText"))
+        self.setWindowTitle("this is reg window")
+
+
+class MemWindow(QMainWindow):
+    def __init__(self):
+        super(MemWindow, self).__init__()
+        self.resize(800, 400)
+        self.memText = QtGui.QTextBrowser(self)
+        self.memText.setGeometry(QtCore.QRect(0, 0, 800, 400))
+        self.memText.setObjectName(_fromUtf8("regText"))
+        self.setWindowTitle("this is mem window")
 
 if __name__ == "__main__":
     import sys
