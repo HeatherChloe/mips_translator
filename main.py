@@ -11,6 +11,7 @@ for i in range(0, 32):
 
 mem_list = {}
 
+
 def show_result():
     pass
 
@@ -21,6 +22,7 @@ def show_reg():
 
 def show_mem():
     return str(mem_list)
+
 
 def ready_to_run(opt_list_with_line_num):
     try:
