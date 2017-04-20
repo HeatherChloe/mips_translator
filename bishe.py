@@ -12,6 +12,7 @@ from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QWidget
 
+import if_opt_equals
 import main
 
 try:
@@ -156,6 +157,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
+
+        self.regwindow = RegWindow()
         ########################
         #     CONNECT AREA     #
         ########################
@@ -177,7 +180,6 @@ class Ui_MainWindow(object):
 
     def showRegResult(self):
         # regWindow=QWidget.QMessageBox.
-        self.regwindow = RegWindow()
         self.regwindow.show()
 
     def showMemResult(self):
@@ -186,7 +188,9 @@ class Ui_MainWindow(object):
 
     def run_file(self):
         main.main()
-        # self.regText.setText(main.show_reg())
+        code_result = if_opt_equals.result_str
+        # self.regwindow.regText.setText(code_result)
+        self.resultText.setText(code_result)
         # self.memText.setText(main.show_mem())
 
     def close_tab(self):

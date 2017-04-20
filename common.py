@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # may rewrite with C
 
+result_mem = ""
+result_reg = ""
+
 
 def gen_lines(line):
     try:
@@ -26,16 +29,16 @@ def gen_lines(line):
     return result
 
 
-def init_nd(reg, num):
-    try:
-        num = int(num)
-        if num < len(reg):
-            return
-        for i in range(0, num):
-            reg.append('null')
-    except Exception as e:
-        print(e)
-    return reg
+# def init_nd(reg, num):
+#     try:
+#         num = int(num)
+#         if num < len(reg):
+#             return
+#         for i in range(0, num):
+#             reg.append('null')
+#     except Exception as e:
+#         print(e)
+#     return reg
 
 
 def unsigned(num):
