@@ -56,6 +56,19 @@ def add_to_reg(nt, rt, reg):
     return reg
 
 
+def reg_show(nt, reg, debug_flag):
+    str_reg = ""
+    count = 0
+    for each in reg:
+        str_reg += str(count) + ': ' + str(each)
+        str_reg += '\n'
+        count += 1
+    global result_reg
+    result_reg = str_reg
+    if debug_flag is True:
+        return nt, reg
+
+
 class HandlerI:
     try:
         def get_nt(self, opt):
@@ -80,18 +93,22 @@ class HandlerI:
             return ext_16
 
         def ori(self, elses, reg):
-            op = '001101'
-            nt = self.get_nt(elses)
-            ns = self.get_ns(elses)
-            imm16 = self.getimm(elses)
-            imm16_n = self.ext(imm16)
-            a = rmv(imm16_n)
-            rs = reg[int(ns)]
-            rd = "%05d" % (int(rs) | int(a))
-            add_to_reg(nt, rd, reg)
-            ext = self.ext_16_str(self.ext(imm16))
-            nt = rmv(bin(int(nt))).zfill(5)
-            ns = rmv(bin(int(ns))).zfill(5)
+            try:
+                op = '001101'
+                nt = self.get_nt(elses)
+                ns = self.get_ns(elses)
+                imm16 = self.getimm(elses)
+                imm16_n = self.ext(imm16)
+                a = rmv(imm16_n)
+                rs = reg[int(ns)]
+                rd = "%05d" % (int(rs) | int(a))
+                add_to_reg(nt, rd, reg)
+                ext = self.ext_16_str(self.ext(imm16))
+                nt = rmv(bin(int(nt))).zfill(5)
+                ns = rmv(bin(int(ns))).zfill(5)
+                reg_show(nt, reg, debug_flag=False)
+            except Exception as e:
+                print(e)
             return str("#32'b" + op + "_" + ns + "_" + nt + "_" + '_'.join(ext[i:i + 4] for i in range(0, len(ext), 4)))
 
         def addiu(self, elses, reg):
@@ -192,7 +209,6 @@ class HandlerR:
             nd = rmv(bin(int(nd)))
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
-            # return rd
 
         def sub(self, elses, reg):
             op = '000000'
@@ -223,7 +239,6 @@ class HandlerR:
             nd = rmv(bin(int(nd)))
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
-            # return rd
 
         def slt(self, elses, reg):
             op = '000000'
@@ -273,8 +288,6 @@ class HandlerR:
             shamt = rmv(bin(shamt).zfill(5))
             return str("#32'b" + op + '_' + rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5) + '_' + str(
                 shamt).zfill(5) + '_' + func)
-            # print(reg)
-            # return rd
 
         def sll(self,elses, reg):
             op = '000000'
@@ -286,6 +299,8 @@ class HandlerR:
             shamt = int(shamt)
             reg[nt] = int(reg[nt])
             rd = rmv(bin(reg[nt] << shamt)).zfill(32)
+            if len(rd) != 32:
+                rd = rd[:32].zfill(32)
             add_to_reg(nd, rd, reg)
             nd = rmv(bin(int(nd)))
             nt = rmv(bin(int(nt)))
@@ -302,9 +317,12 @@ class HandlerR:
             shamt = self.get_shamt(elses)
             shamt = int(shamt)
             nt = int(nt)
-            reg[nt] = int(rmv(reg[nt]))
-            rd = bin(reg[nt] >> shamt)
-            rd = rmv(rd).rjust(32, [1]) if bin(reg[nt])[0] == 1 else rmv(rd.zfill(32))
+            if len(reg[nt]) == 32:
+                rd = reg[nt][:-shamt].zfill(32)
+            else:
+                reg[nt] = int(rmv(reg[nt]))
+                rd = bin(reg[nt] >> shamt)
+                rd = rmv(rd).rjust(32, [1]) if bin(reg[nt])[0] == 1 else rmv(rd.zfill(32))
             add_to_reg(nd, rd, reg)
             nd = rmv(bin(int(nd)))
             nt = rmv(bin(int(nt)))
