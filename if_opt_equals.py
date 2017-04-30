@@ -127,6 +127,6 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num):
     except Exception as e:
         print(e)
         print(trace())
-        print('---???---')
+        print('---opt eqls err---')
     print(reg_list)
     print(mem_list)
