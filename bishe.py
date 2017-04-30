@@ -12,6 +12,7 @@ from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QWidget
 
+import common
 import if_opt_equals
 import main
 
@@ -179,7 +180,6 @@ class Ui_MainWindow(object):
         print("debug mode")
 
     def showRegResult(self):
-        # regWindow=QWidget.QMessageBox.
         self.regwindow.show()
 
     def showMemResult(self):
@@ -191,7 +191,7 @@ class Ui_MainWindow(object):
         code_result = if_opt_equals.result_str
         # self.regwindow.regText.setText(code_result)
         self.resultText.setText(code_result)
-        # self.memText.setText(main.show_mem())
+        self.regwindow.regText.setText(common.result_reg)
 
     def close_tab(self):
         # 关闭标签
