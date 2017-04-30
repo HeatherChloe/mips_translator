@@ -160,6 +160,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(0)
 
         self.regwindow = RegWindow()
+        self.memwindow = MemWindow()
         ########################
         #     CONNECT AREA     #
         ########################
@@ -183,16 +184,15 @@ class Ui_MainWindow(object):
         self.regwindow.show()
 
     def showMemResult(self):
-        self.memwindow = RegWindow()
         self.memwindow.show()
 
     def run_file(self):
         self.resultText.windowFilePath()
         main.main(file_name)
         code_result = if_opt_equals.result_str
-        # self.regwindow.regText.setText(code_result)
         self.resultText.setText(code_result)
         self.regwindow.regText.setText(common.result_reg)
+        self.memwindow.memText.setText(common.result_mem)
 
     def close_tab(self):
         # 关闭标签
@@ -272,9 +272,9 @@ class Ui_MainWindow(object):
 class RegWindow(QMainWindow):
     def __init__(self):
         super(RegWindow, self).__init__()
-        self.resize(800, 400)
+        self.resize(800, 1200)
         self.regText = QtGui.QTextBrowser(self)
-        self.regText.setGeometry(QtCore.QRect(0, 0, 800, 400))
+        self.regText.setGeometry(QtCore.QRect(0, 0, 800, 1200))
         self.regText.setObjectName(_fromUtf8("regText"))
         self.setWindowTitle("this is reg window")
 
@@ -282,10 +282,10 @@ class RegWindow(QMainWindow):
 class MemWindow(QMainWindow):
     def __init__(self):
         super(MemWindow, self).__init__()
-        self.resize(800, 400)
+        self.resize(800, 1200)
         self.memText = QtGui.QTextBrowser(self)
-        self.memText.setGeometry(QtCore.QRect(0, 0, 800, 400))
-        self.memText.setObjectName(_fromUtf8("regText"))
+        self.memText.setGeometry(QtCore.QRect(0, 0, 800, 1200))
+        self.memText.setObjectName(_fromUtf8("memText"))
         self.setWindowTitle("this is mem window")
 
 if __name__ == "__main__":

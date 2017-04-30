@@ -66,7 +66,21 @@ def reg_show(nt, reg, debug_flag):
     global result_reg
     result_reg = str_reg
     if debug_flag is True:
-        return nt, reg
+        pass
+
+
+def mem_show(mem, debug_flag):
+    try:
+        str_mem = ""
+        for k, v in mem.items():
+            str_mem += str(k) + ': ' + str(v)
+            str_mem += '\n'
+        global result_mem
+        result_mem = str_mem
+        if debug_flag is True:
+            pass
+    except Exception as e:
+        print(e)
 
 
 class HandlerI:
@@ -122,6 +136,7 @@ class HandlerI:
             ext = self.ext_16_str(self.ext(imm16))
             nt = rmv(bin(int(nt)))
             ns = rmv(bin(int(ns)))
+            reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(
                 ext[i:i + 4] for i in range(0, len(ext), 4)))
 
@@ -146,6 +161,7 @@ class HandlerI:
                 ext = self.ext_16_str(self.ext(imm16))
                 nt = rmv(bin(int(nt)))
                 ns = rmv(bin(int(ns)))
+                mem_show(mem, debug_flag=False)
             except Exception as e:
                 print("sw debug")
                 print(e)
@@ -167,6 +183,7 @@ class HandlerI:
                 ext = self.ext_16_str(self.ext(imm16))
                 nt = rmv(bin(int(nt)))
                 ns = rmv(bin(int(ns)))
+                mem_show(mem, debug_flag=False)
             except Exception as e:
                 print('lw')
                 print(e)
@@ -207,6 +224,7 @@ class HandlerR:
             ns = rmv(bin(int(ns)))
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
+            reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -222,6 +240,7 @@ class HandlerR:
             ns = rmv(bin(int(ns)))
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
+            reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -237,6 +256,7 @@ class HandlerR:
             ns = rmv(bin(int(ns)))
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
+            reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -253,6 +273,7 @@ class HandlerR:
             ns = rmv(bin(int(ns)))
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
+            reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -269,6 +290,7 @@ class HandlerR:
             ns = rmv(bin(int(ns)))
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
+            reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -286,6 +308,7 @@ class HandlerR:
             nd = rmv(bin(int(nd)))
             nt = rmv(bin(int(nt)))
             shamt = rmv(bin(shamt).zfill(5))
+            reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + '_' + rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5) + '_' + str(
                 shamt).zfill(5) + '_' + func)
 
@@ -305,6 +328,7 @@ class HandlerR:
             nd = rmv(bin(int(nd)))
             nt = rmv(bin(int(nt)))
             shamt = rmv(bin(shamt).zfill(5))
+            reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + '_' + rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5) + '_' + str(
                 shamt).zfill(5) + '_' + func)
 
@@ -327,6 +351,7 @@ class HandlerR:
             nd = rmv(bin(int(nd)))
             nt = rmv(bin(int(nt)))
             shamt = rmv(bin(shamt).zfill(5))
+            reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + '_' + rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5) + '_' + str(
                 shamt).zfill(5) + '_' + func)
     except Exception as e:
