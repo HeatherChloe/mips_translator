@@ -54,7 +54,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser_2">
+   <widget class="QTextBrowser" name="memText">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -64,7 +64,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser_3">
+   <widget class="QTextBrowser" name="resultText">
     <property name="geometry">
      <rect>
       <x>590</x>

@@ -13,7 +13,6 @@ mem_list = {}
 
 def run_main(opt_list_with_line_num):
     try:
-
         print("###########Run Prepare###########")
         for opt in opt_list_with_line_num:
             if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num)
