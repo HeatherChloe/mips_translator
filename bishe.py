@@ -187,7 +187,8 @@ class Ui_MainWindow(object):
         self.memwindow.show()
 
     def run_file(self):
-        main.main()
+        self.resultText.windowFilePath()
+        main.main(file_name)
         code_result = if_opt_equals.result_str
         # self.regwindow.regText.setText(code_result)
         self.resultText.setText(code_result)

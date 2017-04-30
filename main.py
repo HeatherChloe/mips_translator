@@ -37,7 +37,7 @@ def run_main(opt_list_with_line_num):
         print("############Exception main############")
 
 
-def main():
-    opt_list_with_line_num = file_works.file_to_edit_ver('E:\workSpace\mips_translator\\file_in.txt')
+def main(filename):
+    opt_list_with_line_num = file_works.file_to_edit_ver(filename)
     run_main(opt_list_with_line_num)
 
