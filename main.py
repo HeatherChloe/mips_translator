@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import sys
 from inspect import trace
 
 import file_works
@@ -12,25 +11,14 @@ for i in range(0, 32):
 mem_list = {}
 
 
-def show_result():
-    main()
-
-
-def show_reg():
-    pass
-
-
-def show_mem():
-    pass
-
-
 def run_main(opt_list_with_line_num):
     try:
 
         print("###########Run Prepare###########")
         for opt in opt_list_with_line_num:
             if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num)
-
+        print(reg_list)
+        print(mem_list)
     except Exception as e:
         print(e)
         print(trace())

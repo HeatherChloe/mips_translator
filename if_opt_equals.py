@@ -128,5 +128,4 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num):
         print(e)
         print(trace())
         print('---opt eqls err---')
-    print(reg_list)
-    print(mem_list)
+
