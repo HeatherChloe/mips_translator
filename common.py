@@ -11,6 +11,7 @@ def gen_lines(line):
         count_space = 0
         result_str = ""
         line.replace('\t', '')
+
         for each in line:
             if each == ' ':
                 if count_space == 0:
@@ -18,10 +19,10 @@ def gen_lines(line):
                     count_space = 1
             else:
                 result_str += each
-
-        for each in result_str:
-            if each == '#':
-                result = ''.join(result_str.split(each)[0])
+        if '#' in result_str:
+            result = ''.join(result_str.split('#')[0])
+        else:
+            result = result_str
     except Exception as e:
         print("########genlines Exception############")
         print(e)
@@ -72,9 +73,10 @@ def reg_show(nt, reg, debug_flag):
 def mem_show(mem, debug_flag):
     try:
         str_mem = ""
-        for k, v in mem.items():
-            str_mem += str(k) + ': ' + str(v)
-            str_mem += '\n'
+        if mem:
+            for k, v in mem.items():
+                str_mem += str(k) + ': ' + str(v)
+                str_mem += '\n'
         global result_mem
         result_mem = str_mem
         if debug_flag is True:
@@ -146,7 +148,6 @@ class HandlerI:
                 ns = self.get_ns(elses)
                 nt = self.get_nt(elses)
                 imm16 = self.getimm(elses)
-
                 nt = int(nt)
                 ns = int(ns)
                 imm16_n = int(rmv(self.ext(imm16)), 2)
@@ -187,6 +188,21 @@ class HandlerI:
             except Exception as e:
                 print('lw')
                 print(e)
+            return str("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(
+                ext[i:i + 4] for i in range(0, len(ext), 4)))
+
+        def beq(self, idx, elses):
+            try:
+                op = '000100'
+                ns = self.get_ns(elses)
+                nt = self.get_nt(elses)
+                nt = rmv(bin(int(nt))).zfill(5)
+                ns = rmv(bin(int(ns))).zfill(5)
+                imm16 = idx
+                ext = self.ext_16_str(self.ext(imm16))
+            except Exception as e:
+                print(e)
+                print("beq error")
             return str("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(
                 ext[i:i + 4] for i in range(0, len(ext), 4)))
     except Exception as e:
@@ -354,6 +370,28 @@ class HandlerR:
             reg_show(nt, reg, debug_flag=False)
             return str("#32'b" + op + '_' + rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5) + '_' + str(
                 shamt).zfill(5) + '_' + func)
+    except Exception as e:
+        print(e)
+        print("***???***")
+
+
+class HandlerJ:
+    try:
+        def getimm(self, imm16):
+            imm16 = imm16.replace("0x", "")
+            return imm16
+
+        def ext(self, imm16):
+            imm16 = int(imm16, 16)
+            imm16 = bin(imm16).replace('b', '')
+            return imm16
+
+        def ext_16_str(self, stri):
+            ext_16 = stri.zfill(16)
+            return ext_16
+
+        def j(self, elses):
+            pass
     except Exception as e:
         print(e)
         print("***???***")

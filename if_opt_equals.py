@@ -13,6 +13,7 @@ def result_mine(pc, opt, bytecode_rst):
     result_str += str(pc) + " " + str(opt) + '\n'
     result_str += bytecode_rst
     result_str += '\n\n'
+    print(result_str)
 
 
 def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num):
@@ -66,34 +67,34 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num):
             result_mine(pc, opt, sltu_result)
 
         if action == 'beq':
-            op = '000100'
             beq_obj = HandlerI()
             ns = beq_obj.get_ns(elses)
             nt = beq_obj.get_nt(elses)
             rs = int(reg_list[int(ns)])
             rt = int(reg_list[int(nt)])
-            nt = rmv(bin(int(nt))).zfill(5)
-            ns = rmv(bin(int(ns))).zfill(5)
 
             if rt == rs:
                 mark = elses[-1]
                 if isinstance(mark, str):
-                    imm16 = '0000_0000_0000_0001'
-                    beq_result = ("#32'b" + op + "_" + ns + "_" + nt + "_" + imm16)
-                    result_mine(pc, opt, beq_result)
+                    idx_beq = opt_list_with_line_num.index(opt)
+                    # 差的指令条数
                     for each in opt_list_with_line_num:
                         opt_ = list(each.values())
                         if opt_[0][0].startswith(mark):
+                            mark_line = opt_list_with_line_num.index(each)
                             key_tmp = list(each.keys())
                             val_tmp = opt_[0]
                             lst_tmp = [val_tmp[0].split(':')[-1]] + val_tmp[1:]
-                            opt_list_with_line_num[opt_list_with_line_num.index(each)] = \
+                            opt_list_with_line_num[int(mark_line)] = \
                                 {key_tmp[0]: lst_tmp}
                             list_to_beq_jump.append(opt_list_with_line_num
                                                     [opt_list_with_line_num.index({key_tmp[0]: lst_tmp}):])
                             for x in list_to_beq_jump[0][::-1]:
                                 location_beq = opt_list_with_line_num.index(opt)
                                 opt_list_with_line_num.insert(location_beq + len(list_to_beq_jump), x)
+                            quotas = int(mark_line) - int(idx_beq)
+                            beq_result = beq_obj.beq(quotas, elses)
+                            result_mine(pc, opt, beq_result)
                 elif isinstance(mark, int):
                     pass
 
@@ -114,6 +115,7 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num):
 
         if action == 'j':
             op = '000010'
+            # ？
             target = int(elses[1])
             tar_pri = rmv(str(target))
             j_result = ('#32b' + op + '_' + '_'.join(tar_pri[i:i + 4] for i in range(0, len(tar_pri), 4)))

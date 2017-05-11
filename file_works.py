@@ -3,6 +3,7 @@ import os
 import shutil
 
 import sys
+from inspect import trace
 
 from common import gen_lines
 
@@ -30,15 +31,15 @@ def file_to_edit_ver(file_name):
                     if line.startswith('#') or line.startswith('\t') or line == '':
                         continue
                     else:
-                        line_num = line_count
-                        line_ = gen_lines(line)
-                        line_ = line_.replace(' ', ',').split(',')
-                        rst = {str(line_num): line_}
+                        line1 = gen_lines(line)
+                        line_ = line1.replace(' ', ',')
+                        line_tmp = line_.split(',')
+                        rst = {str(line_count): line_tmp}
                         result.append(rst)
-        print(result)
-        return result
-    except Exception:
+    except Exception as e:
         print("############Exception file_works############")
-        print(Exception)
+        print(e)
+        print(trace())
         print("############Exception file_works############")
     print("############File To Edit Ver############")
+    return result

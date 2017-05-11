@@ -6,8 +6,13 @@
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
+import ctypes
+import os
+import threading
 
+import time
 
+import signal
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QWidget
@@ -31,8 +36,8 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-global file_name
-file_name = ''
+name_and_tab = {}
+# debug_job = None
 
 
 class Ui_MainWindow(object):
@@ -64,7 +69,7 @@ class Ui_MainWindow(object):
         self.textEdit = QtGui.QTextEdit(self.tab)
         self.textEdit.setGeometry(QtCore.QRect(0, 0, 625, 750))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
-
+        name_and_tab[0] = "already"
         # self.regText = QtGui.QTextBrowser(self.centralwidget)
         # self.regText.setGeometry(QtCore.QRect(710, 30, 601, 51))
         # self.regText.setObjectName(_fromUtf8("regText"))
@@ -141,6 +146,10 @@ class Ui_MainWindow(object):
         self.action_memShow.setObjectName(_fromUtf8("action_memShow"))
         self.action_memShow.setShortcut('Ctrl+Shift+M')
 
+        self.action_clear = QtGui.QAction(MainWindow)
+        self.action_clear.setObjectName(_fromUtf8("action_clear"))
+        self.action_clear.setShortcut('Ctrl+L')
+
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.run_or_debug.menuAction())
         self.menubar.addAction(self.regAndMem.menuAction())
@@ -155,6 +164,7 @@ class Ui_MainWindow(object):
 
         self.regAndMem.addAction(self.action_regShow)
         self.regAndMem.addAction(self.action_memShow)
+        self.regAndMem.addAction(self.action_clear)
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -171,14 +181,15 @@ class Ui_MainWindow(object):
         self.action_save_as.connect(self.action_save_as, QtCore.SIGNAL('triggered()'), self.save_file_as)
         self.action_run.connect(self.action_run, QtCore.SIGNAL('triggered()'), self.run_file)
         self.action_debug.connect(self.action_debug, QtCore.SIGNAL('triggered()'), self.debug_file)
-
+        self.action_clear.connect(self.action_clear, QtCore.SIGNAL('triggered()'), self.clear_all)
         self.action_regShow.connect(self.action_regShow, QtCore.SIGNAL('triggered()'), self.showRegResult)
         self.action_memShow.connect(self.action_memShow, QtCore.SIGNAL('triggered()'), self.showMemResult)
-
         self.tabWidget.connect(self.tabWidget, QtCore.SIGNAL("tabCloseRequested(int)"), self.close_tab)
 
-    def debug_file(self):
-        print("debug mode")
+    def clear_all(self):
+        self.resultText.clear()
+        self.regwindow.regText.clear()
+        self.memwindow.memText.clear()
 
     def showRegResult(self):
         self.regwindow.show()
@@ -187,26 +198,64 @@ class Ui_MainWindow(object):
         self.memwindow.show()
 
     def run_file(self):
-        self.resultText.windowFilePath()
-        main.main(file_name)
+
+        curr_index = self.tabWidget.currentIndex()
+        file_name = name_and_tab.get(curr_index)
+        opt_list_with_line_num = main.to_opt_list(file_name)
+        main.main(opt_list_with_line_num)
+
+        self.regwindow.regText.setText('')
+        self.memwindow.memText.setText('')
+
         code_result = if_opt_equals.result_str
         self.resultText.setText(code_result)
         self.regwindow.regText.setText(common.result_reg)
         self.memwindow.memText.setText(common.result_mem)
 
+    def debug_file(self):
+        curr_index = self.tabWidget.currentIndex()
+        file_name = name_and_tab.get(curr_index)
+        global debug_job
+        # debug_job = Job(file_name)
+        # debug_job.start()
+        debug_job.run()
+        code_result = if_opt_equals.result_str
+        self.resultText.setText(code_result)
+        self.regwindow.regText.setText(common.result_reg)
+        self.memwindow.memText.setText(common.result_mem)
+
+    def close_idx(self, curr_index):
+        b = {}
+        print(curr_index)
+        for k, v in name_and_tab.items():
+            if k < curr_index:
+                b[k] = v
+            if k > curr_index:
+                b[k - 1] = v
+        global name_and_tab
+        name_and_tab = b
+
     def close_tab(self):
         # 关闭标签
-        i = self.tabWidget.currentIndex()  # 获取当前处于激活状态的标签
-        self.tabWidget.removeTab(i)
+        curr_index = self.tabWidget.currentIndex()  # 获取当前处于激活状态的标签
+        self.tabWidget.removeTab(curr_index)
+        name_and_tab.pop(curr_index)
+        self.close_idx(curr_index)
+        print(name_and_tab)
 
     def new_file(self):
         self.tab = QtGui.QWidget()
         self.tabWidget.addTab(self.tab, _fromUtf8("new_tab"))
         self.tabWidget.setTabsClosable(True)
+        curr_index = self.tabWidget.currentIndex
+        name_and_tab[curr_index] = ""
         self.textEdit = QtGui.QTextEdit(self.tab)
         self.textEdit.setGeometry(QtCore.QRect(QtCore.QRect(0, 0, 625, 750)))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
+
+    def next_step(self):
+        print("next step")
 
     def open_file(self):
         try:
@@ -215,6 +264,12 @@ class Ui_MainWindow(object):
             tab_name = str(self.filename.split('/')[-1])
             # self.tab.setObjectName(_fromUtf8(tab_name))
             self.tabWidget.addTab(self.tab, _fromUtf8(tab_name))
+            curr_index = self.tabWidget.currentIndex()
+            if curr_index == 0 and name_and_tab.get(curr_index) != "already":
+                name_and_tab[curr_index] = self.filename
+            else:
+                name_and_tab[curr_index + 1] = self.filename
+            print(name_and_tab)
             self.tabWidget.setTabsClosable(True)
             self.textEdit = QtGui.QTextEdit(self.tab)
             self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 750))
@@ -223,14 +278,16 @@ class Ui_MainWindow(object):
             fp = open(self.filename, encoding="utf-8")
             data = fp.read()
             self.textEdit.setText(data)
-            global file_name
-            file_name = self.filename
-
+            self.resultText.setText('')
+            self.regwindow.regText.setText('')
+            self.memwindow.memText.setText('')
         except UnicodeDecodeError:
             QtGui.QMessageBox.question(None, 'Warning', "Error: Please use utf-8 encoding to input file!")
 
     def save_file(self):
-        if file_name == '':
+        curr_index = self.tabWidget.currentIndex()
+        file_name = name_and_tab[curr_index]
+        if file_name is None:
             self.save_file_as()
         else:
             fp = open(file_name, 'w+')
@@ -244,9 +301,8 @@ class Ui_MainWindow(object):
         fp = open(self.filename, 'w')
         fp.write(data)
         fp.close()
-
-    def next_step(self):
-        print("linked to next step")
+        curr_index = self.tabWidget.currentIndex()
+        file_name = name_and_tab[curr_index]
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
@@ -264,9 +320,43 @@ class Ui_MainWindow(object):
         self.regAndMem.setTitle(_translate("MainWindow", "查看", None))
         self.action_regShow.setText(_translate("MainWindow", "寄存器", None))
         self.action_memShow.setText(_translate("MainWindow", "存储器", None))
+        self.action_clear.setText(_translate("MainWindow", "清屏", None))
 
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "file_name", None))
         self.tabWidget.setCurrentIndex(0)
+
+
+class Job(threading.Thread):
+    def __init__(self, opt_list_with_line_num, opt, reg, mem, *args, **kwargs):
+        super(Job, self).__init__(*args, **kwargs)
+        self.__flag = threading.Event()  # 用于暂停线程的标识
+        self.__flag.set()  # 设置为True
+        self.__running = threading.Event()  # 用于停止线程的标识
+        self.__running.set()  # 将running设置为True
+        # self.__file_name = file_name
+        self.__opt_list_with_line_num = opt_list_with_line_num
+        self.opt = opt
+        self.reg = reg
+        self.mem = mem
+
+    def run(self):
+        while self.__running.isSet():
+            self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
+            main.if_opt_eqs_func(self.opt, self.reg, self.mem, self.__opt_list_with_line_num)
+
+    def pause(self):
+        self.__flag.clear()  # 设置为False, 让线程阻塞
+
+    def resume(self):
+        self.__flag.set()  # 设置为True, 让线程停止阻塞
+
+    def stop(self):
+        self.__flag.set()  # 将线程从暂停状态恢复, 如何已经暂停的话
+        self.__running.clear()  # 设置为False
+
+
+def receive_signal():
+    print("I recived signal than I shall go on")
 
 
 class RegWindow(QMainWindow):
@@ -288,7 +378,8 @@ class MemWindow(QMainWindow):
         self.memText.setObjectName(_fromUtf8("memText"))
         self.setWindowTitle("this is mem window")
 
-if __name__ == "__main__":
+
+def ui_main():
     import sys
     app = QtGui.QApplication(sys.argv)
     MainWindow = QtGui.QMainWindow()
@@ -297,3 +388,5 @@ if __name__ == "__main__":
     MainWindow.show()
     sys.exit(app.exec_())
 
+if __name__ == "__main__":
+    ui_main()
