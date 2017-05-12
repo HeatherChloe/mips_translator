@@ -19,10 +19,12 @@ def gen_lines(line):
                     count_space = 1
             else:
                 result_str += each
+                result_str = result_str.split('\n')[0]
         if '#' in result_str:
             result = ''.join(result_str.split('#')[0])
         else:
             result = result_str
+        # if '\n' in result:
     except Exception as e:
         print("########genlines Exception############")
         print(e)
@@ -100,8 +102,11 @@ class HandlerI:
             return imm16
 
         def ext(self, imm16):
-            imm16 = int(imm16, 16)
-            imm16 = bin(imm16).replace('b', '')
+            try:
+                imm16 = int(imm16, 16)
+                imm16 = bin(imm16).replace('b', '')
+            except Exception as e:
+                print("ext err %s" % e)
             return imm16
 
         def ext_16_str(self, stri):
@@ -198,8 +203,8 @@ class HandlerI:
                 nt = self.get_nt(elses)
                 nt = rmv(bin(int(nt))).zfill(5)
                 ns = rmv(bin(int(ns))).zfill(5)
-                imm16 = idx
-                ext = self.ext_16_str(self.ext(imm16))
+                imm16 = int(rmv(self.ext(str(idx))), 2)
+                ext = self.ext_16_str(str(self.ext(str(imm16))))
             except Exception as e:
                 print(e)
                 print("beq error")
