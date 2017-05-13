@@ -13,13 +13,23 @@ import threading
 import time
 
 import signal
+import trace
+from asyncio import async
+from multiprocessing import pool
+from multiprocessing.dummy import Pool
+
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import QThread
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QWidget
 
 import common
+import cons
 import if_opt_equals
 import main
+from cons import name_and_tab
+from file_works import file_to_edit_ver
+from thread_works import debugQueue
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -36,7 +46,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-name_and_tab = {}
+# name_and_tab = {}
 # debug_job = None
 
 
@@ -203,37 +213,52 @@ class Ui_MainWindow(object):
         file_name = name_and_tab.get(curr_index)
         opt_list_with_line_num = main.to_opt_list(file_name)
         main.main(opt_list_with_line_num)
-
-        self.regwindow.regText.setText('')
-        self.memwindow.memText.setText('')
-
         code_result = if_opt_equals.result_str
         self.resultText.setText(code_result)
         self.regwindow.regText.setText(common.result_reg)
         self.memwindow.memText.setText(common.result_mem)
+
+    def eventListener(self):
+        try:
+            curr_index = self.tabWidget.currentIndex()
+            file_name = name_and_tab.get(curr_index)
+            opt_list_with_line_num = main.to_opt_list(file_name)
+
+            count = 0
+            if cons.next_flag is True:
+                opt = opt_list_with_line_num[count]
+                main.if_opt_eqs_func(opt, main.reg_list, main.mem_list, opt_list_with_line_num)
+                count += 1
+                cons.next_flag = False
+                code_result = if_opt_equals.result_str
+                self.resultText.setText(code_result)
+                # self.regwindow.regText.setText(common.result_reg)
+                # self.memwindow.memText.setText(common.result_mem)
+        except Exception as e:
+            print(e)
+            print(trace)
 
     def debug_file(self):
+        cons.count = 0
+        if_opt_equals.result_str = ''
+        main.reg_list = []
+        for i in range(0, 32):
+            main.reg_list.append(0)
+        main.mem_list = {}
         curr_index = self.tabWidget.currentIndex()
         file_name = name_and_tab.get(curr_index)
-        global debug_job
-        # debug_job = Job(file_name)
-        # debug_job.start()
-        debug_job.run()
-        code_result = if_opt_equals.result_str
-        self.resultText.setText(code_result)
-        self.regwindow.regText.setText(common.result_reg)
-        self.memwindow.memText.setText(common.result_mem)
+        opt_list_with_line_num = main.to_opt_list(file_name)
+        cons.debug_obj = debugQueue(main.reg_list, main.mem_list, opt_list_with_line_num)
 
     def close_idx(self, curr_index):
         b = {}
         print(curr_index)
-        for k, v in name_and_tab.items():
+        for k, v in cons.name_and_tab.items():
             if k < curr_index:
                 b[k] = v
             if k > curr_index:
                 b[k - 1] = v
-        global name_and_tab
-        name_and_tab = b
+        cons.name_and_tab = b
 
     def close_tab(self):
         # 关闭标签
@@ -255,7 +280,14 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
 
     def next_step(self):
-        print("next step")
+        # print("next step")
+        # count = cons.count
+        cons.debug_obj.q_pop(cons.count)
+        cons.count += 1
+        code_result = if_opt_equals.result_str
+        self.resultText.setText(code_result)
+        self.regwindow.regText.setText(common.result_reg)
+        self.memwindow.memText.setText(common.result_mem)
 
     def open_file(self):
         try:
@@ -304,6 +336,7 @@ class Ui_MainWindow(object):
         fp.close()
         curr_index = self.tabWidget.currentIndex()
         file_name = name_and_tab[curr_index]
+        name_and_tab[curr_index] = file_name
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
@@ -327,33 +360,35 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(0)
 
 
-class Job(threading.Thread):
-    def __init__(self, opt_list_with_line_num, opt, reg, mem, *args, **kwargs):
-        super(Job, self).__init__(*args, **kwargs)
-        self.__flag = threading.Event()  # 用于暂停线程的标识
-        self.__flag.set()  # 设置为True
-        self.__running = threading.Event()  # 用于停止线程的标识
-        self.__running.set()  # 将running设置为True
-        # self.__file_name = file_name
-        self.__opt_list_with_line_num = opt_list_with_line_num
-        self.opt = opt
-        self.reg = reg
-        self.mem = mem
-
-    def run(self):
-        while self.__running.isSet():
-            self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
-            main.if_opt_eqs_func(self.opt, self.reg, self.mem, self.__opt_list_with_line_num)
-
-    def pause(self):
-        self.__flag.clear()  # 设置为False, 让线程阻塞
-
-    def resume(self):
-        self.__flag.set()  # 设置为True, 让线程停止阻塞
-
-    def stop(self):
-        self.__flag.set()  # 将线程从暂停状态恢复, 如何已经暂停的话
-        self.__running.clear()  # 设置为False
+# class Job(QThread):
+#     def __init__(self, opt_list_with_line_num, reg, mem, opt, *args, **kwargs):
+#         super(Job, self).__init__(*args, **kwargs)
+#         self.__flag = threading.Event()  # 用于暂停线程的标识
+#         self.__flag.set()  # 设置为True
+#         self.__running = threading.Event()  # 用于停止线程的标识
+#         self.__running.set()  # 将running设置为True
+#         # self.__file_name = file_name
+#         self.__opt_list_with_line_num = opt_list_with_line_num
+#         self.opt = opt
+#         self.reg = reg
+#         self.mem = mem
+#
+#     def pause(self):
+#         self.__flag.clear()  # 设置为False, 让线程阻塞
+#
+#     def run(self):
+#         while self.__running.isSet():
+#             self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
+#             main.if_opt_eqs_func(self.opt, self.reg, self.mem, self.__opt_list_with_line_num)
+#             self.pause()
+#             print("233333")
+#
+#     def resume(self):
+#         self.__flag.set()  # 设置为True, 让线程停止阻塞
+#
+#     def stop(self):
+#         self.__flag.set()  # 将线程从暂停状态恢复, 如何已经暂停的话
+#         self.__running.clear()  # 设置为False
 
 
 def receive_signal():

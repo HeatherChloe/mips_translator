@@ -22,7 +22,8 @@ def file_to_edit_ver(file_name):
             line_count += 1
             if not line.startswith('main'):
                 where_main_line += 1
-            elif line.startswith(('main')):
+            # elif line.startswith(('main')):
+            else:
                 rst = {str(line_count): gen_lines(line.split(':')[-1]).replace(' ', ',').split(',')}
                 result.append(rst)
                 for line in fp.readlines()[where_main_line:]:

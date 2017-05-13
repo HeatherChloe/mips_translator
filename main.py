@@ -7,6 +7,7 @@ from inspect import trace
 import bishe
 import file_works
 from if_opt_equals import  if_opt_eqs_func
+# from thread_works import Job
 
 reg_list = []
 for i in range(0, 32):
@@ -26,25 +27,14 @@ def to_opt_list(filename):
     return opt_list_with_line_num
 
 
-def main(opt_list_with_line_num, debug_flag=None):
+def main(opt_list_with_line_num):
     # opt_list_with_line_num = file_works.file_to_edit_ver(filename)
     # run_main(opt_list_with_line_num)
     try:
         print("###########Run Prepare###########")
         for opt in opt_list_with_line_num:
             if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num)
-        if debug_flag:
-            for opt in opt_list_with_line_num:
-                debug_mode(opt_list_with_line_num, opt)
-            # parent_pid = os.getpid()
-            # import psutil
-            # p = psutil.Process(parent_pid)
-            # print('Process status : %s' % p.status())
-            # print("my pid is %s " % parent_pid)
-            # debug_job = bishe.Job()
-             # debug_job.pause()
 
-        # if debug_flag
     except Exception as e:
         print(e)
         print(trace())
@@ -52,27 +42,19 @@ def main(opt_list_with_line_num, debug_flag=None):
     # receive_signal()
 
 
-def debug_mode(opt_list_with_line_num):
-    # opt_list_with_line_num = file_works.file_to_edit_ver(filename)
-    # run_main(opt_list_with_line_num)
-    try:
-        print("###########Run Prepare###########")
-        for opt in opt_list_with_line_num:
-            if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num)
-            parent_pid = os.getpid()
-            import psutil
-            p = psutil.Process(parent_pid)
-            print('Process status : %s' % p.status())
-            print("my pid is %s " % parent_pid)
-            # opt = opt
-            debug_job = bishe.Job(opt_list_with_line_num, opt, reg_list, mem_list)
-            debug_job.pause()
-
-    except Exception as e:
-        print(e)
-        print(trace())
-        print("############Exception main############")
-
-def print123():
-    for i in range(0, 7):
-        print(i)
+# def debug_mode(opt_list_with_line_num):
+#     # opt_list_with_line_num = file_works.file_to_edit_ver(filename)
+#     # run_main(opt_list_with_line_num)
+#     try:
+#         print("###########Run Prepare###########")
+#         for opt in opt_list_with_line_num:
+#             debug_job = Job(opt_list_with_line_num, opt, reg_list, mem_list)
+#             debug_job.run()
+#             # code_result = if_opt_equals.result_str
+#             # bishe.Ui_MainWindow.resultText.setText(code_result)
+#             # self.regwindow.regText.setText(common.result_reg)
+#             # self.memwindow.memText.setText(common.result_mem)
+#     except Exception as e:
+#         print(e)
+#         print(trace())
+#         print("############Exception main############")
