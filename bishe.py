@@ -259,10 +259,15 @@ class Ui_MainWindow(object):
 
     def open_file(self):
         try:
-            self.filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './')
             self.tab = QtGui.QWidget()
+            self.filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './')
+
             tab_name = str(self.filename.split('/')[-1])
-            # self.tab.setObjectName(_fromUtf8(tab_name))
+            self.tabWidget.setTabsClosable(True)
+            self.textEdit = QtGui.QTextEdit(self.tab)
+            self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 750))
+            self.textEdit.setObjectName(_fromUtf8("textEdit"))
+            self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", tab_name, None))
             self.tabWidget.addTab(self.tab, _fromUtf8(tab_name))
             curr_index = self.tabWidget.currentIndex()
             if curr_index == 0 and name_and_tab.get(curr_index) != "already":
@@ -270,11 +275,7 @@ class Ui_MainWindow(object):
             else:
                 name_and_tab[curr_index + 1] = self.filename
             print(name_and_tab)
-            self.tabWidget.setTabsClosable(True)
-            self.textEdit = QtGui.QTextEdit(self.tab)
-            self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 750))
-            self.textEdit.setObjectName(_fromUtf8("textEdit"))
-            self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", tab_name, None))
+
             fp = open(self.filename, encoding="utf-8")
             data = fp.read()
             self.textEdit.setText(data)
