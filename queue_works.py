@@ -1,5 +1,3 @@
-import threading
-
 import if_opt_equals
 import main
 

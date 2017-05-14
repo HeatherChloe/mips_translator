@@ -6,30 +6,16 @@
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
-import ctypes
-import os
-import threading
-
-import time
-
-import signal
-import trace
-from asyncio import async
-from multiprocessing import pool
-from multiprocessing.dummy import Pool
 
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import QThread
 from PyQt4.QtGui import QMainWindow
-from PyQt4.QtGui import QWidget
 
 import common
 import cons
 import if_opt_equals
 import main
 from cons import name_and_tab
-from file_works import file_to_edit_ver
-from thread_works import debugQueue
+from queue_works import debugQueue
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -218,37 +204,47 @@ class Ui_MainWindow(object):
         self.regwindow.regText.setText(common.result_reg)
         self.memwindow.memText.setText(common.result_mem)
 
-    def eventListener(self):
-        try:
-            curr_index = self.tabWidget.currentIndex()
-            file_name = name_and_tab.get(curr_index)
-            opt_list_with_line_num = main.to_opt_list(file_name)
-
-            count = 0
-            if cons.next_flag is True:
-                opt = opt_list_with_line_num[count]
-                main.if_opt_eqs_func(opt, main.reg_list, main.mem_list, opt_list_with_line_num)
-                count += 1
-                cons.next_flag = False
-                code_result = if_opt_equals.result_str
-                self.resultText.setText(code_result)
-                # self.regwindow.regText.setText(common.result_reg)
-                # self.memwindow.memText.setText(common.result_mem)
-        except Exception as e:
-            print(e)
-            print(trace)
+    # def eventListener(self):
+    #     try:
+    #         curr_index = self.tabWidget.currentIndex()
+    #         file_name = name_and_tab.get(curr_index)
+    #         opt_list_with_line_num = main.to_opt_list(file_name)
+    #
+    #         count = 0
+    #         if cons.next_flag is True:
+    #             opt = opt_list_with_line_num[count]
+    #             main.if_opt_eqs_func(opt, main.reg_list, main.mem_list, opt_list_with_line_num)
+    #             count += 1
+    #             cons.next_flag = False
+    #             code_result = if_opt_equals.result_str
+    #             self.resultText.setText(code_result)
+    #             # self.regwindow.regText.setText(common.result_reg)
+    #             # self.memwindow.memText.setText(common.result_mem)
+    #     except Exception as e:
+    #         print(e)
+    #         print(trace)
 
     def debug_file(self):
         cons.count = 0
+        cons.line_num = None
+        cons.changed_reg = None
+        cons.changed_mem = None
         if_opt_equals.result_str = ''
         main.reg_list = []
         for i in range(0, 32):
             main.reg_list.append(0)
         main.mem_list = {}
+        self.regwindow.regText.setText("123123")
+        # for each in main.reg_list:
+        #     self.regwindow.regText.append(str(main.reg_list.index(each)) + ':' + str(each) + '\n')
+        # self.regwindow.regText.setText(common.result_reg)
+        self.memwindow.memText.setText(common.result_mem)
         curr_index = self.tabWidget.currentIndex()
         file_name = name_and_tab.get(curr_index)
         opt_list_with_line_num = main.to_opt_list(file_name)
         cons.debug_obj = debugQueue(main.reg_list, main.mem_list, opt_list_with_line_num)
+        self.regwindow.regText.setText(common.result_reg)
+        self.memwindow.memText.setText(common.result_mem)
 
     def close_idx(self, curr_index):
         b = {}
@@ -280,14 +276,54 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
 
     def next_step(self):
-        # print("next step")
-        # count = cons.count
         cons.debug_obj.q_pop(cons.count)
         cons.count += 1
         code_result = if_opt_equals.result_str
-        self.resultText.setText(code_result)
-        self.regwindow.regText.setText(common.result_reg)
-        self.memwindow.memText.setText(common.result_mem)
+        last_step = ''.join(code_result.split('\n\n')[-2])
+
+        before_last_step_lst = '\n\n'.join(code_result.split('\n\n')[:-2])
+        self.resultText.append('\n\n')
+        self.resultText.setText(before_last_step_lst)
+        self.resultText.append('\n\n')
+        self.resultText.append("<font color=\"#ec0053\">%s</font>" % last_step)
+
+        ####debug show reg####
+        if cons.changed_reg:
+            reg_list = common.result_reg.split('\n')
+            for reg_each in reg_list:
+                try:
+                    if reg_each:
+                        c_reg = int(reg_each.split(':')[0])
+                except Exception as e:
+                    print(e)
+                if c_reg == cons.changed_reg:
+                    index_target = int(common.result_reg.index(reg_each))
+                    reg_before = common.result_reg[:index_target]
+                    reg_after = common.result_reg[index_target:].split('\n')[1:]
+                    self.regwindow.regText.setText(str(reg_before))
+                    self.regwindow.regText.append("<font color=\"#ec0053\">%s</font>" % reg_each)
+                    self.regwindow.regText.append('\n'.join(reg_after))
+                    break
+            # self.regwindow.regText.setText(common.result_reg)
+        if cons.changed_mem: #key
+            mem_list = common.result_mem.split('\n')[:-1]
+            for each in mem_list:
+                if int(each.split(':')[0]) == cons.changed_mem:
+                    try:
+                        index_mem = mem_list.index(each)
+                        mem_before = mem_list[:index_mem]
+                        mem_after = mem_list[index_mem+1:]
+                        if mem_before:
+                            result_m = ''
+                            for each_n in mem_before:
+                                result_m += each_n + '\n'
+                            self.memwindow.memText.setText(result_m)
+                        self.memwindow.memText.append("<font color=\"#ec0053\">%s</font>" % each)
+                        if mem_after:
+                            self.memwindow.memText.append('\n'.join(mem_after))
+                        break
+                    except Exception as e:
+                        print(e)
 
     def open_file(self):
         try:
@@ -403,6 +439,7 @@ class RegWindow(QMainWindow):
         self.regText.setGeometry(QtCore.QRect(0, 0, 800, 1200))
         self.regText.setObjectName(_fromUtf8("regText"))
         self.setWindowTitle("this is reg window")
+        self.regText.setText("this is reg")
 
 
 class MemWindow(QMainWindow):

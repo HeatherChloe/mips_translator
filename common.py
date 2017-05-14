@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # may rewrite with C
+from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import QRegExp
+
+import cons
 
 result_mem = ""
 result_reg = ""
@@ -42,7 +46,13 @@ def gen_lines(line):
 #     except Exception as e:
 #         print(e)
 #     return reg
-
+def myBin(stri):
+    count = 0
+    rst = 0
+    for each in stri[::-1]:
+        rst += int(each) * 2**count
+        count += 1
+    return rst
 
 def unsigned(num):
     unsigned_num = num & 0xffffffff
@@ -59,7 +69,7 @@ def add_to_reg(nt, rt, reg):
     return reg
 
 
-def reg_show(nt, reg, debug_flag):
+def reg_show(nt, reg, debug_flag=None):
     str_reg = ""
     count = 0
     for each in reg:
@@ -68,7 +78,7 @@ def reg_show(nt, reg, debug_flag):
         count += 1
     global result_reg
     result_reg = str_reg
-    if debug_flag is True:
+    if debug_flag:
         pass
 
 
@@ -128,6 +138,8 @@ class HandlerI:
                 nt = rmv(bin(int(nt))).zfill(5)
                 ns = rmv(bin(int(ns))).zfill(5)
                 reg_show(nt, reg, debug_flag=False)
+                cons.changed_reg = myBin(nt)
+
             except Exception as e:
                 print(e)
             return str("#32'b" + op + "_" + ns + "_" + nt + "_" + '_'.join(ext[i:i + 4] for i in range(0, len(ext), 4)))
@@ -144,6 +156,7 @@ class HandlerI:
             nt = rmv(bin(int(nt)))
             ns = rmv(bin(int(ns)))
             reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
             return str("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(
                 ext[i:i + 4] for i in range(0, len(ext), 4)))
 
@@ -168,6 +181,7 @@ class HandlerI:
                 nt = rmv(bin(int(nt)))
                 ns = rmv(bin(int(ns)))
                 mem_show(mem, debug_flag=False)
+                cons.changed_mem = mem_key
             except Exception as e:
                 print("sw debug")
                 print(e)
@@ -189,7 +203,9 @@ class HandlerI:
                 ext = self.ext_16_str(self.ext(imm16))
                 nt = rmv(bin(int(nt)))
                 ns = rmv(bin(int(ns)))
-                mem_show(mem, debug_flag=False)
+                # mem_show(mem, debug_flag=False)
+                reg_show(nt, reg)
+                cons.changed_reg = myBin(nt)
             except Exception as e:
                 print('lw')
                 print(e)
@@ -246,6 +262,7 @@ class HandlerR:
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
             reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -262,6 +279,7 @@ class HandlerR:
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
             reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -278,6 +296,7 @@ class HandlerR:
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
             reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -295,6 +314,7 @@ class HandlerR:
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
             reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -312,6 +332,7 @@ class HandlerR:
             nt = rmv(bin(int(nt)))
             nd = rmv(bin(int(nd)))
             reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
             return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
                 5) + '_' + shamt + '_' + func)
 
@@ -330,6 +351,7 @@ class HandlerR:
             nt = rmv(bin(int(nt)))
             shamt = rmv(bin(shamt).zfill(5))
             reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
             return str("#32'b" + op + '_' + rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5) + '_' + str(
                 shamt).zfill(5) + '_' + func)
 
@@ -350,6 +372,7 @@ class HandlerR:
             nt = rmv(bin(int(nt)))
             shamt = rmv(bin(shamt).zfill(5))
             reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
             return str("#32'b" + op + '_' + rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5) + '_' + str(
                 shamt).zfill(5) + '_' + func)
 
@@ -373,6 +396,7 @@ class HandlerR:
             nt = rmv(bin(int(nt)))
             shamt = rmv(bin(shamt).zfill(5))
             reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
             return str("#32'b" + op + '_' + rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5) + '_' + str(
                 shamt).zfill(5) + '_' + func)
     except Exception as e:
