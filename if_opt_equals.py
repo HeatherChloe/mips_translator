@@ -22,7 +22,7 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num, debugFlag=N
         pc = opt_list_with_line_num.index(opt) * 4
         action = list(opt.values())[0][0]
         elses = list(opt.values())[0][0:]
-        cons.line_num = int(list(opt.keys())[0])
+        cons.changed_line = int(list(opt.keys())[0])
         if action == 'ori':
             ori_obj = HandlerI()
             ori_result = ori_obj.ori(elses, reg_list)

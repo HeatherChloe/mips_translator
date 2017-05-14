@@ -14,10 +14,12 @@ class debugQueue:
         self.queue = self.opt_list_with_line_num
 
     def q_pop(self, count):
-        opt = self.opt_list_with_line_num[count]
-        main.if_opt_eqs_func(opt, self.reg_list, self.mem_list, self.opt_list_with_line_num)
-        # self.opt_list_with_line_num.remove(opt)
-        # count += 1
-        if len(self.opt_list_with_line_num) - 1 == count:
-            if_opt_equals.result_str += "别点了 你完了"
-
+        try:
+            opt = self.opt_list_with_line_num[count]
+            main.if_opt_eqs_func(opt, self.reg_list, self.mem_list, self.opt_list_with_line_num)
+            # self.opt_list_with_line_num.remove(opt)
+            # count += 1
+            if len(self.opt_list_with_line_num) - 1 == count:
+                if_opt_equals.result_str += "别点了 你完了"
+        except Exception as e:
+            print(e)

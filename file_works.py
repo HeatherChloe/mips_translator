@@ -5,6 +5,7 @@ import shutil
 import sys
 from inspect import trace
 
+import cons
 from common import gen_lines
 
 
@@ -13,9 +14,12 @@ def file_to_edit_ver(file_name):
 
         print("############File To Edit Ver############")
         print("#               LOADING                #")
-
+        f = open(file_name, encoding='utf-8')
+        cons.data = f.readlines()
+        f.close()
         result = []
         fp = open(file_name, encoding='utf-8')
+        # cons.data = fp.read()
         line_count = 0
         for line in fp:
             where_main_line = 0

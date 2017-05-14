@@ -229,22 +229,23 @@ class Ui_MainWindow(object):
         cons.line_num = None
         cons.changed_reg = None
         cons.changed_mem = None
+        cons.data = None
         if_opt_equals.result_str = ''
         main.reg_list = []
         for i in range(0, 32):
             main.reg_list.append(0)
         main.mem_list = {}
-        self.regwindow.regText.setText("123123")
-        # for each in main.reg_list:
-        #     self.regwindow.regText.append(str(main.reg_list.index(each)) + ':' + str(each) + '\n')
+        # self.regwindow.regText.setText("123123")
+        for each in main.reg_list:
+            self.regwindow.regText.append(str(main.reg_list.index(each)) + ':' + str(each) + '\n')
         # self.regwindow.regText.setText(common.result_reg)
-        self.memwindow.memText.setText(common.result_mem)
+        # self.memwindow.memText.setText(common.result_mem)
         curr_index = self.tabWidget.currentIndex()
         file_name = name_and_tab.get(curr_index)
         opt_list_with_line_num = main.to_opt_list(file_name)
         cons.debug_obj = debugQueue(main.reg_list, main.mem_list, opt_list_with_line_num)
-        self.regwindow.regText.setText(common.result_reg)
-        self.memwindow.memText.setText(common.result_mem)
+        # self.regwindow.regText.setText(common.result_reg)
+        # self.memwindow.memText.setText(common.result_mem)
 
     def close_idx(self, curr_index):
         b = {}
@@ -304,8 +305,7 @@ class Ui_MainWindow(object):
                     self.regwindow.regText.append("<font color=\"#ec0053\">%s</font>" % reg_each)
                     self.regwindow.regText.append('\n'.join(reg_after))
                     break
-            # self.regwindow.regText.setText(common.result_reg)
-        if cons.changed_mem: #key
+        if cons.changed_mem:
             mem_list = common.result_mem.split('\n')[:-1]
             for each in mem_list:
                 if int(each.split(':')[0]) == cons.changed_mem:
@@ -324,6 +324,24 @@ class Ui_MainWindow(object):
                         break
                     except Exception as e:
                         print(e)
+        if cons.changed_line:
+            try:
+                file_list = cons.data
+                file_fore = file_list[:int(cons.changed_line)-1]
+                file_after = file_list[int(cons.changed_line):]
+                if file_fore:
+                    result_f = ""
+                    for each_line_fore in file_fore:
+                        result_f += each_line_fore
+                    self.textEdit.setText(result_f)
+                self.textEdit.append("<font color=\"#ec0053\">%s</font>" % file_list[int(cons.changed_line)-1])
+                if file_after:
+                    result_a = ""
+                    for each_a in file_after:
+                        result_a += each_a
+                    self.textEdit.append(result_a)
+            except Exception as e:
+                print(e)
 
     def open_file(self):
         try:

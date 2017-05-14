@@ -6,3 +6,4 @@ count = 0
 changed_reg = None
 changed_mem = None
 changed_line = None
+data = None
