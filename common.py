@@ -47,6 +47,7 @@ def gen_lines(line):
 #         print(e)
 #     return reg
 def myBin(stri):
+    # bin to int
     count = 0
     rst = 0
     for each in stri[::-1]:
@@ -114,7 +115,7 @@ class HandlerI:
         def ext(self, imm16):
             try:
                 imm16 = int(imm16, 16)
-                imm16 = bin(imm16).replace('b', '')
+                imm16 = bin(imm16).replace('0b', '')
             except Exception as e:
                 print("ext err %s" % e)
             return imm16
@@ -132,14 +133,19 @@ class HandlerI:
                 imm16_n = self.ext(imm16)
                 a = rmv(imm16_n)
                 rs = reg[int(ns)]
-                rd = "%05d" % (int(rs) | int(a))
+                if not isinstance(rs, int):
+                    rs = myBin(rs)
+                    a = myBin(a)
+                    rst = int(rs) | int(a)
+                    rd = str(rmv(bin(rst))).zfill(5)
+                else:
+                    rd = "%05d" % (int(rs) | int(a))
                 add_to_reg(nt, rd, reg)
                 ext = self.ext_16_str(self.ext(imm16))
                 nt = rmv(bin(int(nt))).zfill(5)
                 ns = rmv(bin(int(ns))).zfill(5)
                 reg_show(nt, reg, debug_flag=False)
                 cons.changed_reg = myBin(nt)
-
             except Exception as e:
                 print(e)
             return str("#32'b" + op + "_" + ns + "_" + nt + "_" + '_'.join(ext[i:i + 4] for i in range(0, len(ext), 4)))
@@ -150,13 +156,20 @@ class HandlerI:
             nt = self.get_nt(elses)
             imm16 = self.getimm(elses)
             imm16_n = rmv(self.ext(imm16))
-            rd = int(reg[int(ns)]) + int(imm16_n)
-            add_to_reg(nt, rd, reg)
-            ext = self.ext_16_str(self.ext(imm16))
-            nt = rmv(bin(int(nt)))
-            ns = rmv(bin(int(ns)))
-            reg_show(nt, reg, debug_flag=False)
-            cons.changed_reg = myBin(nt)
+            try:
+                rs = reg[int(ns)]
+                if not isinstance(rs, int):
+                    rs = myBin(rs)
+                    imm16_n = myBin(imm16_n)
+                rd = int(rs) + int(imm16_n)
+                add_to_reg(nt, rd, reg)
+                ext = self.ext_16_str(self.ext(imm16))
+                nt = rmv(bin(int(nt)))
+                ns = rmv(bin(int(ns)))
+                reg_show(nt, reg, debug_flag=False)
+                cons.changed_reg = myBin(nt)
+            except Exception as e:
+                print(e)
             return str("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(
                 ext[i:i + 4] for i in range(0, len(ext), 4)))
 
@@ -173,8 +186,12 @@ class HandlerI:
                     reg[ns] = int(str(reg[ns]), 2)
                 except Exception:
                     reg[ns] = int(str(reg[ns]))
-                mem_key = int(int(reg[ns]) + imm16_n)
-                mem_val = int(reg[nt])
+                rs = reg[ns]
+                if not isinstance(rs, int):
+                    rs = myBin(rs)
+                    imm16_n = myBin(imm16_n)
+                mem_key = rs + imm16_n
+                mem_val = reg[nt]
                 mem[mem_key] = mem_val
 
                 ext = self.ext_16_str(self.ext(imm16))
@@ -197,13 +214,15 @@ class HandlerI:
                 nt = int(nt)
                 ns = int(ns)
                 imm16_n = int(rmv(self.ext(imm16)), 2)
-
-                rt = mem[int(reg[ns]) + imm16_n]
+                rs = reg[ns]
+                if not isinstance(rs, int):
+                    rs = myBin(rs)
+                    imm16_n = myBin(imm16_n)
+                rt = mem[int(rs) + imm16_n]
                 add_to_reg(nt, rt, reg)
                 ext = self.ext_16_str(self.ext(imm16))
                 nt = rmv(bin(int(nt)))
                 ns = rmv(bin(int(ns)))
-                # mem_show(mem, debug_flag=False)
                 reg_show(nt, reg)
                 cons.changed_reg = myBin(nt)
             except Exception as e:
@@ -256,7 +275,13 @@ class HandlerR:
             ns = self.get_ns(elses)
             nt = self.get_nt(elses)
             nd = self.get_nd(elses)
-            rd = int(reg[ns]) + int(reg[nt])
+            rs = reg[ns]
+            rt = reg[nt]
+            if not isinstance(rs, int):
+                rs = myBin(rs)
+            if not isinstance(rt, int):
+                rt = myBin(rt)
+            rd = int(rs) + int(rt)
             add_to_reg(nd, rd, reg)
             ns = rmv(bin(int(ns)))
             nt = rmv(bin(int(nt)))
@@ -273,7 +298,13 @@ class HandlerR:
             ns = self.get_ns(elses)
             nt = self.get_nt(elses)
             nd = self.get_nd(elses)
-            rd = int(reg[ns]) - int(reg[nt])
+            rs = reg[ns]
+            rt = reg[nt]
+            if not isinstance(rs, int):
+                rs = myBin(rs)
+            if not isinstance(rt, int):
+                rt = myBin(rt)
+            rd = int(rs) - int(rt)
             add_to_reg(nd, rd, reg)
             ns = rmv(bin(int(ns)))
             nt = rmv(bin(int(nt)))
@@ -290,7 +321,13 @@ class HandlerR:
             ns = self.get_ns(elses)
             nt = self.get_nt(elses)
             nd = self.get_nd(elses)
-            rd = unsigned(int(reg[ns])) - unsigned(int(reg[nt]))
+            rs = reg[ns]
+            rt = reg[nt]
+            if not isinstance(rs, int):
+                rs = myBin(rs)
+            if not isinstance(rt, int):
+                rt = myBin(rt)
+            rd = unsigned(int(rs)) - unsigned(int(rt))
             add_to_reg(nd, rd, reg)
             ns = rmv(bin(int(ns)))
             nt = rmv(bin(int(nt)))
@@ -307,7 +344,13 @@ class HandlerR:
             ns = self.get_ns(elses)
             nt = self.get_nt(elses)
             nd = self.get_nd(elses)
-            tmp = int(reg[ns]) - int(reg[nt])
+            rs = reg[ns]
+            rt = reg[nt]
+            if not isinstance(rs, int):
+                rs = myBin(rs)
+            if not isinstance(rt, int):
+                rt = myBin(rt)
+            tmp = int(rs) - int(rt)
             rd = 1 if tmp < 0 else 0
             add_to_reg(nd, rd, reg)
             ns = rmv(bin(int(ns)))
@@ -325,7 +368,13 @@ class HandlerR:
             ns = self.get_ns(elses)
             nt = self.get_nt(elses)
             nd = self.get_nd(elses)
-            tmp = unsigned(int(reg[ns])) - unsigned(int(reg[nt]))
+            rs = reg[ns]
+            rt = reg[nt]
+            if not isinstance(rs, int):
+                rs = myBin(rs)
+            if not isinstance(rt, int):
+                rt = myBin(rt)
+            tmp = unsigned(int(rs)) - unsigned(int(rt))
             rd = 1 if tmp < 0 else 0
             add_to_reg(nd, rd, reg)
             ns = rmv(bin(int(ns)))
