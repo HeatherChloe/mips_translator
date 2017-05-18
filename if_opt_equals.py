@@ -123,8 +123,8 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num, debugFlag=N
             op = '000010'
             # ？
             target = int(elses[1])
-            tar_pri = rmv(bin(target))
-            j_result = ('#32b' + op + '_' + '_'.join(tar_pri[i:i + 4] for i in range(0, len(tar_pri), 4)))
+            tar_pri = rmv(bin(target)).rjust(26, '0')
+            j_result = ('#32b' + op + '_' + tar_pri)
             result_mine(pc, opt, j_result)
             if target > 0:
                 j_list = opt_list_with_line_num[int(target)//4:opt_list_with_line_num.index(opt)]
