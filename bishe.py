@@ -249,7 +249,6 @@ class Ui_MainWindow(object):
 
     def close_idx(self, curr_index):
         b = {}
-        print(curr_index)
         for k, v in cons.name_and_tab.items():
             if k < curr_index:
                 b[k] = v
@@ -264,17 +263,6 @@ class Ui_MainWindow(object):
         name_and_tab.pop(curr_index)
         self.close_idx(curr_index)
         print(name_and_tab)
-
-    def new_file(self):
-        self.tab = QtGui.QWidget()
-        self.tabWidget.addTab(self.tab, _fromUtf8("new_tab"))
-        self.tabWidget.setTabsClosable(True)
-        curr_index = self.tabWidget.currentIndex
-        name_and_tab[curr_index] = ""
-        self.textEdit = QtGui.QTextEdit(self.tab)
-        self.textEdit.setGeometry(QtCore.QRect(QtCore.QRect(0, 0, 625, 750)))
-        self.textEdit.setObjectName(_fromUtf8("textEdit"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
 
     def next_step(self):
         cons.debug_obj.q_pop(cons.count)
@@ -343,6 +331,19 @@ class Ui_MainWindow(object):
             except Exception as e:
                 print(e)
 
+    def new_file(self):
+        self.tab = QtGui.QWidget()
+        self.tabWidget.addTab(self.tab, _fromUtf8("new_tab"))
+        self.tabWidget.setTabsClosable(True)
+        curr_index = self.tabWidget.currentIndex()
+        print(curr_index)
+        name_and_tab[curr_index+1] = ""
+        print(name_and_tab)
+        self.textEdit = QtGui.QTextEdit(self.tab)
+        self.textEdit.setGeometry(QtCore.QRect(QtCore.QRect(0, 0, 625, 750)))
+        self.textEdit.setObjectName(_fromUtf8("textEdit"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
+
     def open_file(self):
         try:
             self.tab = QtGui.QWidget()
@@ -360,7 +361,6 @@ class Ui_MainWindow(object):
                 name_and_tab[curr_index] = self.filename
             else:
                 name_and_tab[curr_index + 1] = self.filename
-            print(name_and_tab)
 
             fp = open(self.filename, encoding="utf-8")
             data = fp.read()
@@ -374,7 +374,7 @@ class Ui_MainWindow(object):
     def save_file(self):
         curr_index = self.tabWidget.currentIndex()
         file_name = name_and_tab[curr_index]
-        if file_name is None:
+        if file_name == '':
             self.save_file_as()
         else:
             fp = open(file_name, 'w+')
@@ -412,41 +412,6 @@ class Ui_MainWindow(object):
 
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "file_name", None))
         self.tabWidget.setCurrentIndex(0)
-
-
-# class Job(QThread):
-#     def __init__(self, opt_list_with_line_num, reg, mem, opt, *args, **kwargs):
-#         super(Job, self).__init__(*args, **kwargs)
-#         self.__flag = threading.Event()  # 用于暂停线程的标识
-#         self.__flag.set()  # 设置为True
-#         self.__running = threading.Event()  # 用于停止线程的标识
-#         self.__running.set()  # 将running设置为True
-#         # self.__file_name = file_name
-#         self.__opt_list_with_line_num = opt_list_with_line_num
-#         self.opt = opt
-#         self.reg = reg
-#         self.mem = mem
-#
-#     def pause(self):
-#         self.__flag.clear()  # 设置为False, 让线程阻塞
-#
-#     def run(self):
-#         while self.__running.isSet():
-#             self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
-#             main.if_opt_eqs_func(self.opt, self.reg, self.mem, self.__opt_list_with_line_num)
-#             self.pause()
-#             print("233333")
-#
-#     def resume(self):
-#         self.__flag.set()  # 设置为True, 让线程停止阻塞
-#
-#     def stop(self):
-#         self.__flag.set()  # 将线程从暂停状态恢复, 如何已经暂停的话
-#         self.__running.clear()  # 设置为False
-
-
-def receive_signal():
-    print("I recived signal than I shall go on")
 
 
 class RegWindow(QMainWindow):
