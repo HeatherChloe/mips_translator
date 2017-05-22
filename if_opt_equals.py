@@ -1,6 +1,5 @@
 from inspect import trace
 
-import cons
 from common import *
 list_to_beq_jump = []
 j_list = []

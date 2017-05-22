@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # may rewrite with C
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import QRegExp
 
 import cons
 

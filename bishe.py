@@ -32,9 +32,6 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-# name_and_tab = {}
-# debug_job = None
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -66,16 +63,6 @@ class Ui_MainWindow(object):
         self.textEdit.setGeometry(QtCore.QRect(0, 0, 625, 750))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
         name_and_tab[0] = "already"
-        # self.regText = QtGui.QTextBrowser(self.centralwidget)
-        # self.regText.setGeometry(QtCore.QRect(710, 30, 601, 51))
-        # self.regText.setObjectName(_fromUtf8("regText"))
-
-        # self.regText.setReadOnly(True)
-
-        # self.memText = QtGui.QTextBrowser(self.centralwidget)
-        # self.memText.setGeometry(QtCore.QRect(710, 110, 601, 51))
-        # self.memText.setObjectName(_fromUtf8("memText"))
-        # self.memText.setReadOnly(True)
 
         self.resultText = QtGui.QTextBrowser(self.centralwidget)
         self.resultText.setGeometry(QtCore.QRect(710, 50, 601, 750))
@@ -203,26 +190,6 @@ class Ui_MainWindow(object):
         self.resultText.setText(code_result)
         self.regwindow.regText.setText(common.result_reg)
         self.memwindow.memText.setText(common.result_mem)
-
-    # def eventListener(self):
-    #     try:
-    #         curr_index = self.tabWidget.currentIndex()
-    #         file_name = name_and_tab.get(curr_index)
-    #         opt_list_with_line_num = main.to_opt_list(file_name)
-    #
-    #         count = 0
-    #         if cons.next_flag is True:
-    #             opt = opt_list_with_line_num[count]
-    #             main.if_opt_eqs_func(opt, main.reg_list, main.mem_list, opt_list_with_line_num)
-    #             count += 1
-    #             cons.next_flag = False
-    #             code_result = if_opt_equals.result_str
-    #             self.resultText.setText(code_result)
-    #             # self.regwindow.regText.setText(common.result_reg)
-    #             # self.memwindow.memText.setText(common.result_mem)
-    #     except Exception as e:
-    #         print(e)
-    #         print(trace)
 
     def debug_file(self):
         cons.count = 0
