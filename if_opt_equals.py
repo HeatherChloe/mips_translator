@@ -1,5 +1,6 @@
 from inspect import trace
 
+import cons
 from common import *
 list_to_beq_jump = []
 j_list = []
@@ -16,7 +17,7 @@ def result_mine(pc, opt, bytecode_rst):
     print(result_str)
 
 
-def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num, debugFlag=None):
+def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num):
     try:
         pc = opt_list_with_line_num.index(opt) * 4
         action = list(opt.values())[0][0]
@@ -26,6 +27,21 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num, debugFlag=N
             ori_obj = HandlerI()
             ori_result = ori_obj.ori(elses, reg_list)
             result_mine(pc, opt, ori_result)
+
+        if action == 'xori':
+            xori_obj = HandlerI()
+            xori_result = xori_obj.ori(elses, reg_list)
+            result_mine(pc, opt, xori_result)
+
+        if action == 'andi':
+            and_obj = HandlerI()
+            andi_result = and_obj.andi(elses, reg_list)
+            result_mine(pc, opt, andi_result)
+
+        if action == 'addi':
+            addi_obj = HandlerI()
+            addi_result = addi_obj.addi(elses, reg_list)
+            result_mine(pc, opt, addi_result)
 
         if action == 'addiu':
             addiu_obj = HandlerI()
@@ -103,6 +119,42 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num, debugFlag=N
                 print(e)
                 print(trace())
 
+        if action == 'bne':
+            try:
+                bne_obj = HandlerI()
+                ns = bne_obj.get_ns(elses)
+                nt = bne_obj.get_nt(elses)
+                rs = int(reg_list[int(ns)])
+                rt = int(reg_list[int(nt)])
+
+                if rt != rs:
+                    mark = elses[-1]
+                    if isinstance(mark, str):
+                        idx_beq = opt_list_with_line_num.index(opt)
+                        # 差的指令条数
+                        for each in opt_list_with_line_num:
+                            opt_ = list(each.values())
+                            if opt_[0][0].startswith(mark):
+                                mark_line = opt_list_with_line_num.index(each)
+                                key_tmp = list(each.keys())
+                                val_tmp = opt_[0]
+                                lst_tmp = [val_tmp[0].split(':')[-1]] + val_tmp[1:]
+                                opt_list_with_line_num[int(mark_line)] = \
+                                    {key_tmp[0]: lst_tmp}
+                                list_to_beq_jump.append(opt_list_with_line_num
+                                                        [opt_list_with_line_num.index({key_tmp[0]: lst_tmp}):])
+                                for x in list_to_beq_jump[0][::-1]:
+                                    location_beq = opt_list_with_line_num.index(opt)
+                                    opt_list_with_line_num.insert(location_beq + len(list_to_beq_jump), x)
+                                quotas = int(mark_line) - int(idx_beq)
+                                bne_result = bne_obj.bne(quotas, elses)
+                                result_mine(pc, opt, bne_result)
+                    elif isinstance(mark, int):
+                        pass
+            except Exception as e:
+                print(e)
+                print(trace())
+
         if action == 'srl':
             srl_obj = HandlerR()
             srl_result = srl_obj.srl(elses, reg_list)
@@ -118,6 +170,11 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num, debugFlag=N
             sra_result = sra_obj.sra(elses, reg_list)
             result_mine(pc, opt, sra_result)
 
+        if action == 'and':
+            and_obj = HandlerR()
+            and_result = and_obj.and_(elses, reg_list)
+            result_mine(pc, opt, and_result)
+
         if action == 'j':
             op = '000010'
             # ？
@@ -131,6 +188,18 @@ def if_opt_eqs_func(opt, reg_list, mem_list, opt_list_with_line_num, debugFlag=N
                 j_list = opt_list_with_line_num[0:opt_list_with_line_num.index(opt)]
             opt_list_with_line_num += j_list
 
+        if action == 'jr':
+            op = '000000'
+            target_idx = int(elses[1].replace('$', ''))
+            target = reg_list[target_idx]
+            tar_pri = rmv(bin(target)).zfill(6)
+            j_result = ('#32b' + op + '_' + tar_pri + '00000_00000_00000_001000')
+            result_mine(pc, opt, j_result)
+            if target > 0:
+                j_list = opt_list_with_line_num[int(target)//4:opt_list_with_line_num.index(opt)]
+            else:
+                j_list = opt_list_with_line_num[0:opt_list_with_line_num.index(opt)]
+            opt_list_with_line_num += j_list
     except Exception as e:
         print(e)
         print(trace())
