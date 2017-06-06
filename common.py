@@ -95,10 +95,7 @@ def mem_show(mem, debug_flag):
             pass
     except Exception as e:
         print(e)
-# 再加五条指令 至少
-# 整理代码
-# 优化
-#2天之内
+
 
 class HandlerI:
     try:
@@ -156,7 +153,7 @@ class HandlerI:
 
         def xori(self, elses, reg):
             try:
-                op = '001101'
+                op = '001110'
                 nt = self.get_nt(elses)
                 ns = self.get_ns(elses)
                 imm16 = self.getimm(elses)
@@ -182,7 +179,7 @@ class HandlerI:
 
         def andi(self, elses, reg):
             try:
-                op = '001101'
+                op = '001100'
                 nt = self.get_nt(elses)
                 ns = self.get_ns(elses)
                 imm16 = self.getimm(elses)
@@ -323,6 +320,22 @@ class HandlerI:
                 print("beq error")
             return str("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(
                 ext[i:i + 4] for i in range(0, len(ext), 4)))
+
+        def bne(self, idx, elses):
+            try:
+                op = '000101'
+                ns = self.get_ns(elses)
+                nt = self.get_nt(elses)
+                nt = rmv(bin(int(nt))).zfill(5)
+                ns = rmv(bin(int(ns))).zfill(5)
+                imm16 = int(self.zero_extend(str(idx)), 2)
+                ext = self.ext_16_str(self.zero_extend(str(imm16)))
+            except Exception as e:
+                print(e)
+                print("beq error")
+            return str("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(
+                ext[i:i + 4] for i in range(0, len(ext), 4)))
+
     except Exception as e:
         print(e)
         print("***???***")
@@ -345,6 +358,29 @@ class HandlerR:
         def get_shamt(self, opt):
             shamt = int(opt[3].zfill(5))
             return shamt
+
+        def and_(self, elses, reg):
+            op = '000000'
+            func = '100100'
+            shamt = '00000'
+            ns = self.get_ns(elses)
+            nt = self.get_nt(elses)
+            nd = self.get_nd(elses)
+            rs = reg[ns]
+            rt = reg[nt]
+            if not isinstance(rs, int):
+                rs = myBin(rs)
+            if not isinstance(rt, int):
+                rt = myBin(rt)
+            rd = int(rs) & int(rt)
+            add_to_reg(nd, rd, reg)
+            ns = rmv(bin(int(ns)))
+            nt = rmv(bin(int(nt)))
+            nd = rmv(bin(int(nd)))
+            reg_show(nt, reg, debug_flag=False)
+            cons.changed_reg = myBin(nt)
+            return str("#32'b" + op + '_' + str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(
+                5) + '_' + shamt + '_' + func)
 
         def add(self, elses, reg):
             op = '000000'
@@ -516,17 +552,11 @@ class HandlerR:
             nt = self.get_ns(elses)
             shamt = self.get_shamt(elses)
             shamt = int(shamt)
-            # nt = int(nt)
             rt = reg[nt]
             if isinstance(reg[nt], str):
                 rt = myBin(rt)
             rd = rmv(bin(rt >> shamt))
-            # if len(reg[nt]) == 32:
-            #     rd = reg[nt][:-shamt].zfill(32)
-            # else:
-            #     reg[nt] = int(rmv(reg[nt]))
-            #     rd = bin(reg[nt] >> shamt)
-            #     rd = rmv(rd).rjust(32, [1]) if bin(reg[nt])[0] == 1 else rmv(rd.zfill(32))
+
             add_to_reg(nd, rd, reg)
             nd = rmv(bin(int(nd)))
             nt = rmv(bin(int(nt)))

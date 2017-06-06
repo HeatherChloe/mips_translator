@@ -28,8 +28,6 @@ def to_opt_list(filename):
 
 
 def main(opt_list_with_line_num):
-    # opt_list_with_line_num = file_works.file_to_edit_ver(filename)
-    # run_main(opt_list_with_line_num)
     try:
         print("###########Run Prepare###########")
         for opt in opt_list_with_line_num:
@@ -39,22 +37,3 @@ def main(opt_list_with_line_num):
         print(e)
         print(trace())
         print("############Exception main############")
-    # receive_signal()
-
-
-# def debug_mode(opt_list_with_line_num):
-#     # opt_list_with_line_num = file_works.file_to_edit_ver(filename)
-#     # run_main(opt_list_with_line_num)
-#     try:
-#         print("###########Run Prepare###########")
-#         for opt in opt_list_with_line_num:
-#             debug_job = Job(opt_list_with_line_num, opt, reg_list, mem_list)
-#             debug_job.run()
-#             # code_result = if_opt_equals.result_str
-#             # bishe.Ui_MainWindow.resultText.setText(code_result)
-#             # self.regwindow.regText.setText(common.result_reg)
-#             # self.memwindow.memText.setText(common.result_mem)
-#     except Exception as e:
-#         print(e)
-#         print(trace())
-#         print("############Exception main############")

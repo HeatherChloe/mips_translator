@@ -173,6 +173,12 @@ class Ui_MainWindow(object):
         self.resultText.clear()
         self.regwindow.regText.clear()
         self.memwindow.memText.clear()
+        cons.changed_mem = ''
+        cons.changed_reg = ''
+        cons.changed_line = ''
+        cons.data = ''
+        common.result_reg = ''
+        common.result_mem = ''
 
     def showRegResult(self):
         self.regwindow.show()
@@ -181,6 +187,18 @@ class Ui_MainWindow(object):
         self.memwindow.show()
 
     def run_file(self):
+        cons.count = 0
+        cons.line_num = None
+        cons.changed_reg = None
+        cons.changed_mem = None
+        cons.data = None
+        if_opt_equals.result_str = ''
+        main.reg_list = []
+        for i in range(0, 32):
+            main.reg_list.append(0)
+        main.mem_list = {}
+        for each in main.reg_list:
+            self.regwindow.regText.append(str(main.reg_list.index(each)) + ':' + str(each) + '\n')
 
         curr_index = self.tabWidget.currentIndex()
         file_name = name_and_tab.get(curr_index)
@@ -202,17 +220,13 @@ class Ui_MainWindow(object):
         for i in range(0, 32):
             main.reg_list.append(0)
         main.mem_list = {}
-        # self.regwindow.regText.setText("123123")
         for each in main.reg_list:
             self.regwindow.regText.append(str(main.reg_list.index(each)) + ':' + str(each) + '\n')
-        # self.regwindow.regText.setText(common.result_reg)
-        # self.memwindow.memText.setText(common.result_mem)
+
         curr_index = self.tabWidget.currentIndex()
         file_name = name_and_tab.get(curr_index)
         opt_list_with_line_num = main.to_opt_list(file_name)
         cons.debug_obj = debugQueue(main.reg_list, main.mem_list, opt_list_with_line_num)
-        # self.regwindow.regText.setText(common.result_reg)
-        # self.memwindow.memText.setText(common.result_mem)
 
     def close_idx(self, curr_index):
         b = {}
