@@ -4,7 +4,7 @@ import subprocess
 import threading
 from inspect import trace
 
-import bishe
+import ui
 import file_works
 from if_opt_equals import  if_opt_eqs_func
 # from thread_works import Job

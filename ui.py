@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         self.textEdit = QtGui.QTextEdit(self.tab)
         self.textEdit.setGeometry(QtCore.QRect(0, 0, 625, 750))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
-        name_and_tab[0] = "already"
+        name_and_tab[0] = ''
 
         self.resultText = QtGui.QTextBrowser(self.centralwidget)
         self.resultText.setGeometry(QtCore.QRect(710, 50, 601, 750))
@@ -164,12 +164,12 @@ class Ui_MainWindow(object):
         self.action_save_as.connect(self.action_save_as, QtCore.SIGNAL('triggered()'), self.save_file_as)
         self.action_run.connect(self.action_run, QtCore.SIGNAL('triggered()'), self.run_file)
         self.action_debug.connect(self.action_debug, QtCore.SIGNAL('triggered()'), self.debug_file)
-        self.action_clear.connect(self.action_clear, QtCore.SIGNAL('triggered()'), self.clear_all)
-        self.action_regShow.connect(self.action_regShow, QtCore.SIGNAL('triggered()'), self.showRegResult)
-        self.action_memShow.connect(self.action_memShow, QtCore.SIGNAL('triggered()'), self.showMemResult)
+        self.action_clear.connect(self.action_clear, QtCore.SIGNAL('triggered()'), self.clean_result)
+        self.action_regShow.connect(self.action_regShow, QtCore.SIGNAL('triggered()'), self.show_reg_result)
+        self.action_memShow.connect(self.action_memShow, QtCore.SIGNAL('triggered()'), self.show_mem_result)
         self.tabWidget.connect(self.tabWidget, QtCore.SIGNAL("tabCloseRequested(int)"), self.close_tab)
 
-    def clear_all(self):
+    def clean_result(self):
         self.resultText.clear()
         self.regwindow.regText.clear()
         self.memwindow.memText.clear()
@@ -179,11 +179,13 @@ class Ui_MainWindow(object):
         cons.data = ''
         common.result_reg = ''
         common.result_mem = ''
+        words_shown = str(self.textEdit.toPlainText())
+        self.textEdit.setText(words_shown)
 
-    def showRegResult(self):
+    def show_reg_result(self):
         self.regwindow.show()
 
-    def showMemResult(self):
+    def show_mem_result(self):
         self.memwindow.show()
 
     def run_file(self):
