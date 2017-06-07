@@ -63,6 +63,7 @@ class Ui_MainWindow(object):
         self.textEdit.setGeometry(QtCore.QRect(0, 0, 625, 750))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
         name_and_tab[0] = ''
+        # print(name_and_tab)
 
         self.resultText = QtGui.QTextBrowser(self.centralwidget)
         self.resultText.setGeometry(QtCore.QRect(710, 50, 601, 750))
@@ -334,13 +335,14 @@ class Ui_MainWindow(object):
 
             tab_name = str(self.filename.split('/')[-1])
             self.tabWidget.setTabsClosable(True)
+            # print(name_and_tab)
             self.textEdit = QtGui.QTextEdit(self.tab)
             self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 750))
             self.textEdit.setObjectName(_fromUtf8("textEdit"))
             self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", tab_name, None))
             self.tabWidget.addTab(self.tab, _fromUtf8(tab_name))
             curr_index = self.tabWidget.currentIndex()
-            if curr_index == 0 and name_and_tab.get(curr_index) != "already":
+            if curr_index == 0 and name_and_tab.get(curr_index) != '':
                 name_and_tab[curr_index] = self.filename
             else:
                 name_and_tab[curr_index + 1] = self.filename
