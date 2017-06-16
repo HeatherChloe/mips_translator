@@ -150,7 +150,7 @@ class Ui_MainWindow(object):
         self.regAndMem.addAction(self.action_memShow)
         self.regAndMem.addAction(self.action_clear)
 
-        self.retranslateUi(MainWindow)
+        self.retranslate_ui(MainWindow)
         self.tabWidget.setCurrentIndex(0)
 
         self.regwindow = RegWindow()
@@ -218,6 +218,7 @@ class Ui_MainWindow(object):
         cons.changed_reg = None
         cons.changed_mem = None
         cons.data = None
+        cons.debug_obj = None
         if_opt_equals.result_str = ''
         main.reg_list = []
         for i in range(0, 32):
@@ -306,7 +307,9 @@ class Ui_MainWindow(object):
                     for each_line_fore in file_fore:
                         result_f += each_line_fore
                     self.textEdit.setText(result_f)
-                self.textEdit.append("<font color=\"#ec0053\">%s</font>" % file_list[int(cons.changed_line)-1])
+                    self.textEdit.append("<font color=\"#ec0053\">%s</font>" % file_list[int(cons.changed_line)-1])
+                else:
+                    self.textEdit.setText("<font color=\"#ec0053\">%s</font>" % file_list[int(cons.changed_line) - 1])
                 if file_after:
                     result_a = ""
                     for each_a in file_after:
@@ -332,7 +335,6 @@ class Ui_MainWindow(object):
         try:
             self.tab = QtGui.QWidget()
             self.filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './')
-
             tab_name = str(self.filename.split('/')[-1])
             self.tabWidget.setTabsClosable(True)
             # print(name_and_tab)
@@ -360,24 +362,36 @@ class Ui_MainWindow(object):
         curr_index = self.tabWidget.currentIndex()
         file_name = name_and_tab[curr_index]
         if file_name == '':
-            self.save_file_as()
+            fname = QtGui.QFileDialog.getSaveFileName(None, 'save_file_as', './')
+            data = str(self.textEdit.toPlainText())
+            fp = open(fname, 'w', encoding="utf-8")
+            fp.write(data)
+            fp.close()
+
+            curr_index = self.tabWidget.currentIndex()
+            name_and_tab[curr_index] = fname
+            set_name = fname.split('/')[-1]
+            self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), set_name)
+            # print(name_and_tab)
+
         else:
-            fp = open(file_name, 'w+')
+            fp = open(file_name, 'w+',  encoding="utf-8")
             data = str(self.textEdit.toPlainText())
             fp.write(data)
             fp.close()
 
     def save_file_as(self):
-        self.filename = QtGui.QFileDialog.getSaveFileName(None, 'save_file_as', './')
-        data = str(self.textEdit.toPlainText())
-        fp = open(self.filename, 'w')
-        fp.write(data)
-        fp.close()
-        curr_index = self.tabWidget.currentIndex()
-        file_name = name_and_tab[curr_index]
-        name_and_tab[curr_index] = file_name
+        try:
+            fname = QtGui.QFileDialog.getSaveFileName(None, 'save_file_as', './')
+            data = str(self.textEdit.toPlainText())
+            fp = open(fname, 'w')
+            fp.write(data)
+            fp.close()
 
-    def retranslateUi(self, MainWindow):
+        except Exception as e:
+            print(e)
+
+    def retranslate_ui(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.commandLinkButton.setText(_translate("MainWindow", "next", None))
         self.menu.setTitle(_translate("MainWindow", "文件", None))
