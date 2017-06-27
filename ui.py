@@ -45,7 +45,7 @@ class Ui_MainWindow(object):
         self.commandLinkButton.setObjectName(_fromUtf8("commandLinkButton"))
         ########################
         #       TAB AREA       #
-        ########################
+        ###################sa#####
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(20, 10, 631, 750))
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
@@ -319,17 +319,19 @@ class Ui_MainWindow(object):
                 print(e)
 
     def new_file(self):
-        self.tab = QtGui.QWidget()
-        self.tabWidget.addTab(self.tab, _fromUtf8("new_tab"))
-        self.tabWidget.setTabsClosable(True)
-        curr_index = self.tabWidget.currentIndex()
-        print(curr_index)
-        name_and_tab[curr_index+1] = ""
-        print(name_and_tab)
-        self.textEdit = QtGui.QTextEdit(self.tab)
-        self.textEdit.setGeometry(QtCore.QRect(QtCore.QRect(0, 0, 625, 750)))
-        self.textEdit.setObjectName(_fromUtf8("textEdit"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
+        try:
+            self.tab = QtGui.QWidget()
+            self.tabWidget.addTab(self.tab, _fromUtf8("new_tab"))
+            self.tabWidget.setTabsClosable(True)
+            curr_index = self.tabWidget.currentIndex()
+            name_and_tab[curr_index+1] = ""
+            self.textEdit = QtGui.QTextEdit(self.tab)
+            self.textEdit.setGeometry(QtCore.QRect(QtCore.QRect(0, 0, 625, 750)))
+            self.textEdit.setObjectName(_fromUtf8("textEdit"))
+            self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "new_tab", None))
+        except Exception:
+            self.tab.close()
+            name_and_tab.pop(curr_index+1)
 
     def open_file(self):
         try:
@@ -337,7 +339,6 @@ class Ui_MainWindow(object):
             self.filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './')
             tab_name = str(self.filename.split('/')[-1])
             self.tabWidget.setTabsClosable(True)
-            # print(name_and_tab)
             self.textEdit = QtGui.QTextEdit(self.tab)
             self.textEdit.setGeometry(QtCore.QRect(0, 0, 571, 750))
             self.textEdit.setObjectName(_fromUtf8("textEdit"))
@@ -348,7 +349,6 @@ class Ui_MainWindow(object):
                 name_and_tab[curr_index] = self.filename
             else:
                 name_and_tab[curr_index + 1] = self.filename
-
             fp = open(self.filename, encoding="utf-8")
             data = fp.read()
             self.textEdit.setText(data)
@@ -361,30 +361,29 @@ class Ui_MainWindow(object):
     def save_file(self):
         curr_index = self.tabWidget.currentIndex()
         file_name = name_and_tab[curr_index]
+
         if file_name == '':
-            fname = QtGui.QFileDialog.getSaveFileName(None, 'save_file_as', './')
+            name_save = QtGui.QFileDialog.getSaveFileName(None, 'save_file_as', './')
             data = str(self.textEdit.toPlainText())
-            fp = open(fname, 'w', encoding="utf-8")
+            fp = open(name_save, 'w', encoding="utf-8")
             fp.write(data)
             fp.close()
-
             curr_index = self.tabWidget.currentIndex()
-            name_and_tab[curr_index] = fname
-            set_name = fname.split('/')[-1]
+            name_and_tab[curr_index] = name_save
+            set_name = name_save.split('/')[-1]
             self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), set_name)
-            # print(name_and_tab)
-
         else:
-            fp = open(file_name, 'w+',  encoding="utf-8")
             data = str(self.textEdit.toPlainText())
+            print(name_and_tab)
+            fp = open(file_name, 'w+',  encoding="utf-8")
             fp.write(data)
             fp.close()
 
     def save_file_as(self):
         try:
-            fname = QtGui.QFileDialog.getSaveFileName(None, 'save_file_as', './')
+            name_save_as = QtGui.QFileDialog.getSaveFileName(None, 'save_file_as', './')
             data = str(self.textEdit.toPlainText())
-            fp = open(fname, 'w')
+            fp = open(name_save_as, 'w')
             fp.write(data)
             fp.close()
 
